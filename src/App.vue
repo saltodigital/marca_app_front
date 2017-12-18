@@ -1,8 +1,12 @@
 <template>
   <div id="app">
-    <transition>
+    <transition name="fade">
       <router-view/>
     </transition>
+    <i class="el-icon-edit"></i>
+    <i class="el-icon-share"></i>
+    <i class="el-icon-delete"></i>
+    <el-button type="primary" icon="el-icon-search">Search</el-button>
   </div>
 </template>
 
@@ -18,5 +22,5 @@ export default {
 </script>
 
 <style lang="scss">
-
+  @import "main.scss";
 </style>

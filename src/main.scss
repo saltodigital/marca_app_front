@@ -1,0 +1,30 @@
+//Vars
+$main-color: #3a385b;
+$white-color: #fefefe;
+$gray-light: #f9f9f9;
+
+//Overwrite Skeleton
+$font-family: "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+//Overwrite Element UI
+$--color-primary: $main-color;
+$--font-path: '~element-ui/packages/theme-chalk/src/fonts';
+
+//Import Libraries
+@import "~skeleton-scss/scss/skeleton.scss";
+@import "~element-ui/packages/theme-chalk/src/index";
+
+@font-face {
+  font-family: 'element-icons';
+  src: url('/static/fonts/element-icons.woff') format("woff"),
+  url('/static/fonts/element-icons.ttf') format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0
+}
