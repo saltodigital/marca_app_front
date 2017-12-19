@@ -14,9 +14,15 @@
                 placement="bottom"
                 width="200"
                 trigger="click">
-          <a href="#">Perfil</a>
-          <br>
-          <a href="#">Salir</a>
+          <ul class="user-menu">
+            <li>
+              <a href="#">Perfil</a>
+            </li>
+            <li>
+              <a href="#" @click="handleLogout">Salir</a>
+            </li>
+          </ul>
+
         </el-popover>
         <div class="avatar" v-popover:options>
         </div>
@@ -24,7 +30,7 @@
       </div>
     </div>
     <el-row>
-      <el-col class="col-menu" :span="menuCollapse ? 1 : 4">
+      <el-col class="col-menu" :xs="menuCollapse ? 0 : 24" :sm="menuCollapse ? 1 : 4">
         <el-menu
                 default-active="1"
                 @open="handleOpen"
@@ -80,7 +86,7 @@
     </el-col>
 
 
-    <el-col :span="menuCollapse ? 23 : 20">
+    <el-col :xs="menuCollapse ? 24 : 0" :sm="menuCollapse ? 23 : 20" v-loading="loading" class="col-content">
       <router-view></router-view>
     </el-col>
 
@@ -91,13 +97,19 @@
 <script>
 export default {
   mounted(){
+      /*
       if(this.$store.state.token === null){
-          //this.$router.replace('login');
+
+      }*/
+      let width = window.screen.width;
+      if(typeof width !== "undefined" && width <= 768){
+          this.menuCollapse = true;
       }
   },
   data () {
     return {
-      menuCollapse: false
+        menuCollapse: false,
+        loading: false,
     }
   },
   methods: {
@@ -106,7 +118,20 @@ export default {
       },
       handleClose(key, keyPath) {
           console.log(key, keyPath);
+      },
+      handleLogout(){
+          this.$store.commit('deleteToken');
+          this.loading = true;
+          setTimeout(()=>{
+             if(this.$store.state.token === null){
+                 this.$router.replace('login');
+             }else{
+
+             }
+              this.loading = false;
+          }, 1000);
       }
-  }
+  },
+
 }
 </script>

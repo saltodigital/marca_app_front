@@ -3,12 +3,12 @@
     <div class="main-form">
       <h2>Iniciar Sesión</h2>
       <p>Por favor ingresa tus credenciales.</p>
-      <el-form :model="user" :rules="rules" ref="vForm">
+      <el-form :model="user" :rules="rules" ref="vForm" @submit="handleLogin">
         <el-form-item label="Email" prop="email">
           <el-input v-model="user.email" placeholder="Email"></el-input>
         </el-form-item>
         <el-form-item label="Contraseña" prop="password">
-          <el-input type="password" v-model="user.password" placeholder="Contraseña"></el-input>
+          <el-input @keyup.enter.native="handleLogin" type="password" v-model="user.password" placeholder="Contraseña"></el-input>
         </el-form-item>
         <el-form-item prop="remember">
           <el-checkbox v-model="user.remember">Recordar mis datos</el-checkbox>

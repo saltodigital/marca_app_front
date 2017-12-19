@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
+import VueCookie from 'vue-cookie';
+Vue.use(VueCookie);
+
 import Login from '../components/Login';
 import Admin from '../components/Admin';
 import Clients from '../components/Clients';
@@ -13,9 +16,18 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'admin',
-      component: Admin,
+        path: '/',
+        name: 'admin',
+        beforeEnter: (to, from, next) => {
+            let ck = Vue.cookie.get('ma_tk_mp');
+            console.log(ck);
+            if(ck === null){
+                next(false);
+            }else{
+                next();
+            }
+        },
+        component: Admin,
         children: [
             {
                 path: '/',

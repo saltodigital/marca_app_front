@@ -119,3 +119,34 @@ body{
   background: $dark-gray;
   transition: all 0.3s ease-in-out;
 }
+.user-menu{
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  li{
+    padding: 5px;
+    a{
+      text-decoration: none;
+      color: $dark-gray;
+      display: block;
+      &:hover{
+        color: $main-color;
+      }
+    }
+  }
+}
+.col-content{
+  padding: 2em;
+  transition: all 0.3s ease-in-out;
+  .el-breadcrumb__item{
+    span{
+      font-size: 1.2rem;
+    }
+  }
+}
+
+//Spaces
+.m-bottom-2{
+  margin-bottom: 2em;
+}
