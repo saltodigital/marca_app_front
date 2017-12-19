@@ -6,6 +6,8 @@ $gray: #F0F3F4;
 $gray-light: #f9f9f9;
 $font-color: #4f4f4f;
 
+$dark-gray: #545c64;
+
 //Overwrite Element UI Vars
 $--color-primary: $main-color;
 $--font-path: '~element-ui/packages/theme-chalk/src/fonts';
@@ -14,6 +16,7 @@ $--color-text-primary: $font-color;
 
 //Import Libraries
 //@import "~skeleton-scss/scss/skeleton.scss";
+@import "~normalize.css";
 @import "~element-ui/packages/theme-chalk/src/index";
 
 
@@ -32,6 +35,25 @@ $--color-text-primary: $font-color;
 p{
   font-size: 0.85rem;
 }
+.el-menu{
+  border: 0px;
+  li, .el-submenu__title{
+    font-size: 13px;
+  }
+}
+.el-menu--collapse {
+  width: 54px;
+}
+.el-menu-item{
+  padding: 0px 15px;
+}
+.el-submenu__title, .el-menu-item{
+  span{
+    margin-left: 10px;
+  }
+}
+
+
 // App Styles
 body{
   font-family: $font-family;
@@ -44,9 +66,56 @@ body{
 }
 body{
   background: $gray;
+  font-size: 0.85rem;
 }
 
 //Custom Clases
 .fluid-width{
   width: 100%;
+}
+
+//Admin Component
+.header{
+  background: $main-color;
+  color: $white-color;
+  width: calc(100% - 20px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  box-shadow: 0px 1px 1px rgba(0,0,0,0.25);
+  .header-right, .header-left{
+    display: flex;
+    align-items: center;
+  }
+  h1{
+    margin: 0;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+  }
+  .avatar{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: $white-color;
+    margin-right: 10px;
+  }
+  a{
+    text-decoration: none;
+    color: $white-color;
+    &:hover{
+      color: #fff;
+    }
+  }
+  .menu-collapse-switch{
+    margin-left: 20px;
+    i{
+      font-size: 1.2rem;
+    }
+  }
+}
+.col-menu{
+  min-height: 100vh;
+  background: $dark-gray;
+  transition: all 0.3s ease-in-out;
 }

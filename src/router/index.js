@@ -6,6 +6,7 @@ import Admin from '../components/Admin';
 import Clients from '../components/Clients';
 import Projects from '../components/Projects';
 import Employees from '../components/Employees';
+import Dashboard from '../components/Dashboard';
 
 Vue.use(Router);
 
@@ -16,6 +17,11 @@ export default new Router({
       name: 'admin',
       component: Admin,
         children: [
+            {
+                path: '/',
+                name: 'dashboard',
+                component: Dashboard
+            },
             {
                 path: 'clients',
                 name: 'clients',
