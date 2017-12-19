@@ -1,19 +1,23 @@
 //Vars
-$main-color: #3a385b;
-$white-color: #fefefe;
-$gray-light: #f9f9f9;
-
-//Overwrite Skeleton
 $font-family: "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$main-color: #26A69A;
+$white-color: #fefefe;
+$gray: #F0F3F4;
+$gray-light: #f9f9f9;
+$font-color: #4f4f4f;
 
-//Overwrite Element UI
+//Overwrite Element UI Vars
 $--color-primary: $main-color;
 $--font-path: '~element-ui/packages/theme-chalk/src/fonts';
+$--color-text-primary: $font-color;
+
 
 //Import Libraries
-@import "~skeleton-scss/scss/skeleton.scss";
+//@import "~skeleton-scss/scss/skeleton.scss";
 @import "~element-ui/packages/theme-chalk/src/index";
 
+
+//Overwrite Element UI
 @font-face {
   font-family: 'element-icons';
   src: url('/static/fonts/element-icons.woff') format("woff"),
@@ -22,9 +26,27 @@ $--font-path: '~element-ui/packages/theme-chalk/src/fonts';
   font-style: normal;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s
+.el-form-item{
+  //margin-bottom: 0px;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+p{
+  font-size: 0.85rem;
+}
+// App Styles
+body{
+  font-family: $font-family;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s
+}
+.fade-enter, .fade-leave-to{
   opacity: 0
+}
+body{
+  background: $gray;
+}
+
+//Custom Clases
+.fluid-width{
+  width: 100%;
 }
