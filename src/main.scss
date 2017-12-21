@@ -146,6 +146,22 @@ body{
   }
 }
 
+.score{
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  border-radius: 50%;
+  &.score-green{
+    background: #5daf34;
+  }
+  &.score-yellow{
+    background: #f3e768;
+  }
+  &.score-red{
+    background: #f31c1b;
+  }
+}
+
 //Spaces
 .m-bottom-1{
   margin-bottom: 1em;

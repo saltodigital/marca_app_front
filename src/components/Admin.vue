@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-    <el-row>
+    <el-row type="flex">
       <el-col class="col-menu" :xs="menuCollapse ? 0 : 24" :sm="menuCollapse ? 1 : 4">
         <el-menu
                 ref="mainMenu"

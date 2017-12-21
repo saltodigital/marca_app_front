@@ -58,7 +58,7 @@ export default {
                         console.log(res.data);
                         this.$store.commit('setToken', {
                             token: res.data.key,
-                            name: 'Administrador',
+                            name: this.user.username,
                             avatar: '',
                             remember: this.user.remember
                         });

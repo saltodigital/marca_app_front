@@ -57,8 +57,13 @@
           </el-table-column>
           <el-table-column
                   width="120"
-                  prop="puntualidad"
                   label="Puntualidad">
+            <template slot-scope="scope">
+              <span class="score score-red" v-if="scope.row.puntualidad < 90"></span>
+              <span class="score score-yellow" v-else-if="scope.row.puntualidad >= 90 && scope.row.puntualidad < 100"></span>
+              <span class="score score-green" v-else=""></span>
+              {{ scope.row.puntualidad }}%
+            </template>
           </el-table-column>
         </el-table-column>
         <el-table-column label="Mensual en curso">
@@ -69,8 +74,13 @@
           </el-table-column>
           <el-table-column
                   width="120"
-                  prop="puntualidad2"
                   label="Puntualidad">
+            <template slot-scope="scope">
+              <span class="score score-red" v-if="scope.row.puntualidad2 < 90"></span>
+              <span class="score score-yellow" v-else-if="scope.row.puntualidad2 >= 90 && scope.row.puntualidad2 < 100"></span>
+              <span class="score score-green" v-else=""></span>
+              {{ scope.row.puntualidad2 }}%
+            </template>
           </el-table-column>
         </el-table-column>
         <el-table-column
@@ -101,9 +111,9 @@ export default {
               provincia: 'Santiago',
               pais: 'Chile',
               trabajadores: '22',
-              puntualidad: '75%',
+              puntualidad: '75',
               trabajadores2: '22',
-              puntualidad2: '75%',
+              puntualidad2: '75',
               supervisor: 'JBerrios',
           }, {
               cliente: 'P001 Falabella',
@@ -114,9 +124,9 @@ export default {
               provincia: 'Santiago',
               pais: 'Chile',
               trabajadores: '22',
-              puntualidad: '75%',
+              puntualidad: '92',
               trabajadores2: '22',
-              puntualidad2: '75%',
+              puntualidad2: '75',
               supervisor: 'JBerrios',
           }, {
               cliente: 'P001 Falabella',
@@ -127,9 +137,9 @@ export default {
               provincia: 'Santiago',
               pais: 'Chile',
               trabajadores: '22',
-              puntualidad: '75%',
+              puntualidad: '100',
               trabajadores2: '22',
-              puntualidad2: '75%',
+              puntualidad2: '75',
               supervisor: 'JBerrios',
           }, {
               cliente: 'P001 Falabella',
@@ -140,9 +150,9 @@ export default {
               provincia: 'Santiago',
               pais: 'Chile',
               trabajadores: '22',
-              puntualidad: '75%',
+              puntualidad: '75',
               trabajadores2: '22',
-              puntualidad2: '75%',
+              puntualidad2: '75',
               supervisor: 'JBerrios',
           }, {
               cliente: 'P001 Falabella',
@@ -153,9 +163,61 @@ export default {
               provincia: 'Santiago',
               pais: 'Chile',
               trabajadores: '22',
-              puntualidad: '75%',
+              puntualidad: '75',
               trabajadores2: '22',
-              puntualidad2: '75%',
+              puntualidad2: '75',
+              supervisor: 'JBerrios',
+          }, {
+              cliente: 'P001 Falabella',
+              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
+              contacto: 'Alfredo Perez',
+              direccion: 'Rosas # 1850',
+              ciudad: 'Santiago',
+              provincia: 'Santiago',
+              pais: 'Chile',
+              trabajadores: '22',
+              puntualidad: '75',
+              trabajadores2: '22',
+              puntualidad2: '75',
+              supervisor: 'JBerrios',
+          }, {
+              cliente: 'P001 Falabella',
+              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
+              contacto: 'Alfredo Perez',
+              direccion: 'Rosas # 1850',
+              ciudad: 'Santiago',
+              provincia: 'Santiago',
+              pais: 'Chile',
+              trabajadores: '22',
+              puntualidad: '75',
+              trabajadores2: '22',
+              puntualidad2: '75',
+              supervisor: 'JBerrios',
+          }, {
+              cliente: 'P001 Falabella',
+              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
+              contacto: 'Alfredo Perez',
+              direccion: 'Rosas # 1850',
+              ciudad: 'Santiago',
+              provincia: 'Santiago',
+              pais: 'Chile',
+              trabajadores: '22',
+              puntualidad: '75',
+              trabajadores2: '22',
+              puntualidad2: '75',
+              supervisor: 'JBerrios',
+          }, {
+              cliente: 'P001 Falabella',
+              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
+              contacto: 'Alfredo Perez',
+              direccion: 'Rosas # 1850',
+              ciudad: 'Santiago',
+              provincia: 'Santiago',
+              pais: 'Chile',
+              trabajadores: '22',
+              puntualidad: '75',
+              trabajadores2: '22',
+              puntualidad2: '75',
               supervisor: 'JBerrios',
           }]
 
