@@ -4,8 +4,8 @@
       <h2>Iniciar Sesión</h2>
       <p>Por favor ingresa tus credenciales.</p>
       <el-form :model="user" :rules="rules" ref="vForm" @submit="handleLogin">
-        <el-form-item label="Email" prop="email">
-          <el-input v-model="user.email" placeholder="Email"></el-input>
+        <el-form-item label="Nombre de usuario" prop="username">
+          <el-input v-model="user.username" placeholder="Usuario"></el-input>
         </el-form-item>
         <el-form-item label="Contraseña" prop="password">
           <el-input @keyup.enter.native="handleLogin" type="password" v-model="user.password" placeholder="Contraseña"></el-input>
@@ -34,13 +34,13 @@ export default {
       return {
           loading: false,
           user:{
-              email: '',
+              username: '',
               password: '',
               remember: false
           },
           rules: {
-              email: [
-                  {required: true, type: 'email', message: 'Ingrese un email válido'}
+              username: [
+                  {required: true, message: 'Ingrese su nombre de usuario'}
               ],
               password: [
                   { required: true, message: 'Ingrese su contraseña'}
@@ -53,11 +53,23 @@ export default {
             this.$refs.vForm.validate((valid)=>{
                 if(valid){
                     this.loading = true;
-                    this.$store.commit('setToken', {token: '123', remember: this.user.remember});
-                    setTimeout(()=>{
+                    http.post('rest-auth/login/', this.user).then((res)=>{
                         this.loading = false;
-                        this.$router.push('admin');
-                    }, 3000);
+                        console.log(res.data);
+                        this.$store.commit('setToken', {
+                            token: res.data.key,
+                            name: 'Administrador',
+                            avatar: '',
+                            remember: this.user.remember
+                        });
+                        this.$router.replace('dashboard');
+                    }).catch((err)=>{
+                        this.loading = false;
+                        this.$message({
+                            message: err.response.data.non_field_errors ? err.response.data.non_field_errors[0] : 'No puede iniciar sesión con las credenciales proporcionadas.',
+                            type: 'warning'
+                        });
+                    });
                 }
             });
         }

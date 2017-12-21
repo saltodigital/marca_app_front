@@ -84,7 +84,7 @@ body{
   align-items: center;
   padding: 10px;
   box-shadow: 0px 1px 1px rgba(0,0,0,0.25);
-  .header-right, .header-left{
+  .header-right, .header-left, .header-right > div{
     display: flex;
     align-items: center;
   }
@@ -147,6 +147,9 @@ body{
 }
 
 //Spaces
+.m-bottom-1{
+  margin-bottom: 1em;
+}
 .m-bottom-2{
   margin-bottom: 2em;
 }

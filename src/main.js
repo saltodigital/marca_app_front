@@ -10,6 +10,11 @@ import ElementUI from 'element-ui';
 import locale from 'element-ui/lib/locale/lang/es';
 Vue.use(ElementUI, { locale });
 
+import axios from 'axios';
+window.http = axios.create({
+    baseURL: 'https://arcane-retreat-9940.herokuapp.com/',
+});
+
 Vue.config.productionTip = false;
 
 new Vue({

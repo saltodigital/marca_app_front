@@ -8,6 +8,12 @@
           <i class="fa fa-indent fa-flip-horizontal" v-else></i>
         </a>
       </div>
+      <div>
+        <p>Marca-app Sistema De Control Horario y Asistencia</p>
+      </div>
+      <div>
+        {{ currentTime }}
+      </div>
       <div class="header-right">
         <el-popover
                 ref="options"
@@ -24,22 +30,24 @@
           </ul>
 
         </el-popover>
-        <div class="avatar" v-popover:options>
+        <div v-popover:options>
+          <div class="avatar">
+          </div>
+          <a href="#">{{ currentName }}</a>
         </div>
-        <a href="#" v-popover:options>Carlos Hernandez</a>
       </div>
     </div>
     <el-row>
       <el-col class="col-menu" :xs="menuCollapse ? 0 : 24" :sm="menuCollapse ? 1 : 4">
         <el-menu
-                default-active="1"
-                @open="handleOpen"
-                @close="handleClose"
+                ref="mainMenu"
+                :router="true"
+                :default-active="menuActive"
                 background-color="#545c64"
                 text-color="#fff"
                 :collapse="menuCollapse">
 
-          <el-menu-item index="1">
+          <el-menu-item index="1" :route="{name: 'dashboard'}">
               <i class="fa fa-th-large"></i>
               <span slot="title">Página Principal</span>
           </el-menu-item>
@@ -49,7 +57,7 @@
                 <i class="fa fa-users"></i>
                 <span slot="title">Clientes</span>
             </template>
-            <el-menu-item index="2-1">Lista Clientes</el-menu-item>
+            <el-menu-item :route="{name: 'clients'}" index="2-1">Lista Clientes</el-menu-item>
             <el-menu-item index="2-2">Detalle Cliente</el-menu-item>
             <el-menu-item index="2-3">Nuevo Cliente Empresa</el-menu-item>
             <el-menu-item index="2-4">Nuevo Cliente Contacto</el-menu-item>
@@ -95,6 +103,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 export default {
   mounted(){
       /*
@@ -105,20 +114,38 @@ export default {
       if(typeof width !== "undefined" && width <= 768){
           this.menuCollapse = true;
       }
+      this.currentTime = this.getTime();
+      setInterval(()=>{
+          this.currentTime = this.getTime();
+      }, 1000);
   },
   data () {
     return {
         menuCollapse: false,
         loading: false,
+        menuActive: "1",
+        currentTime: "",
+        currentName: this.$store.state.name
     }
   },
+  beforeRouteUpdate (to, from, next) {
+      let index = null;
+      switch (to.name){
+          case "dashboard":
+              index = "1";
+              break;
+          case "clients":
+              index = "2-1";
+              break;
+          default:
+              break;
+      }
+      if(index !== null){
+          this.$refs.mainMenu.activeIndex = index;
+      }
+      next();
+  },
   methods: {
-      handleOpen(key, keyPath) {
-          console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-          console.log(key, keyPath);
-      },
       handleLogout(){
           this.$store.commit('deleteToken');
           this.loading = true;
@@ -130,6 +157,9 @@ export default {
              }
               this.loading = false;
           }, 1000);
+      },
+      getTime(){
+          return moment().locale('es').format("dddd D, MMMM YYYY, h:mm:ss a");
       }
   },
 

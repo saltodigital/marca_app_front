@@ -8,19 +8,23 @@ Vue.use(Vuex);
 
 const state = {
     token: Vue.cookie.get('ma_tk_mp'),
+    name: Vue.cookie.get('ma_nm_mp'),
+    avatar: Vue.cookie.get('ma_av_mp')
 };
 
 const mutations = {
     setToken (state, data) {
         state.token = data.token;
-        console.log(data);
+        state.name = data.name;
+        state.avatar = data.avatar;
+        http.defaults.headers.common['Authorization'] = "Token "+data.token;
         if(data.remember === true){
-            Vue.cookie.set('ma_tk_mp', data.token, { expires: '1M' });
-            console.log('recordar un mes');
+            Vue.cookie.set('ma_tk_mp', data.token, { expires: '1D' });
         }else{
             Vue.cookie.set('ma_tk_mp', data.token);
-            console.log('Eliminar al salir');
         }
+        Vue.cookie.set('ma_nm_mp', data.name);
+        Vue.cookie.set('ma_av_mp', data.avatar);
     },
     deleteToken (state) {
         state.token = null;

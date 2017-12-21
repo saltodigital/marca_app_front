@@ -6,10 +6,10 @@ Vue.use(VueCookie);
 
 import Login from '../components/Login';
 import Admin from '../components/Admin';
-import Clients from '../components/Clients';
-import Projects from '../components/Projects';
-import Employees from '../components/Employees';
 import Dashboard from '../components/Dashboard';
+
+//Clients
+import ClientsList from '../components/Clients/List';
 
 Vue.use(Router);
 
@@ -17,10 +17,8 @@ export default new Router({
   routes: [
     {
         path: '/',
-        name: 'admin',
         beforeEnter: (to, from, next) => {
             let ck = Vue.cookie.get('ma_tk_mp');
-            console.log(ck);
             if(ck === null){
                 next(false);
             }else{
@@ -37,17 +35,17 @@ export default new Router({
             {
                 path: 'clients',
                 name: 'clients',
-                component: Clients
+                component: ClientsList
             },
             {
                 path: 'projects',
                 name: 'projects',
-                component: Projects
+                component: ClientsList
             },
             {
                 path: 'employees',
                 name: 'employees',
-                component: Employees
+                component: ClientsList
             }
         ]
     },
