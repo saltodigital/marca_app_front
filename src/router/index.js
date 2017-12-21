@@ -10,6 +10,7 @@ import Dashboard from '../components/Dashboard';
 
 //Clients
 import ClientsList from '../components/Clients/List';
+import ClientsDetail from '../components/Clients/Detail';
 
 Vue.use(Router);
 
@@ -31,11 +32,14 @@ export default new Router({
                 path: '/',
                 name: 'dashboard',
                 component: Dashboard
-            },
-            {
+            },{
                 path: 'clients',
                 name: 'clients',
                 component: ClientsList
+            },{
+                path: 'clients/detail',
+                name: 'clientsDetail',
+                component: ClientsDetail
             },
             {
                 path: 'projects',

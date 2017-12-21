@@ -58,7 +58,7 @@
                 <span slot="title">Clientes</span>
             </template>
             <el-menu-item :route="{name: 'clients'}" index="2-1">Lista Clientes</el-menu-item>
-            <el-menu-item index="2-2">Detalle Cliente</el-menu-item>
+            <el-menu-item :route="{name: 'clientsDetail'}" index="2-2">Detalle Cliente</el-menu-item>
             <el-menu-item index="2-3">Nuevo Cliente Empresa</el-menu-item>
             <el-menu-item index="2-4">Nuevo Cliente Contacto</el-menu-item>
         </el-submenu>

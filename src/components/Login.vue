@@ -4,10 +4,10 @@
       <h2>Iniciar Sesión</h2>
       <p>Por favor ingresa tus credenciales.</p>
       <el-form :model="user" :rules="rules" ref="vForm" @submit="handleLogin">
-        <el-form-item label="Nombre de usuario" prop="username">
+        <el-form-item label="Nombre de usuario" prop="username" class="fluid-width">
           <el-input v-model="user.username" placeholder="Usuario"></el-input>
         </el-form-item>
-        <el-form-item label="Contraseña" prop="password">
+        <el-form-item label="Contraseña" prop="password" class="fluid-width">
           <el-input @keyup.enter.native="handleLogin" type="password" v-model="user.password" placeholder="Contraseña"></el-input>
         </el-form-item>
         <el-form-item prop="remember">
