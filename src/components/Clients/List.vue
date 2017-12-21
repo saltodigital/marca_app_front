@@ -7,7 +7,7 @@
       </el-breadcrumb>
     </el-row>
     <el-row class="m-bottom-1">
-      <p>Vista Por Cliente - Identifica Proyectos, Configuracion Horaria y Recursos Asignados.</p>
+      <p>Vista Por Cliente - Identifica Proyectos, Configuración Horaria y Recursos Asignados.</p>
     </el-row>
     <el-row>
       <el-table

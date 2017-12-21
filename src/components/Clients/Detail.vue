@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </el-row>
     <el-row class="m-bottom-2">
-      <p>Vista Por Cliente - Identificacion del cliente, horarios y proyectos.</p>
+      <p>Vista Por Cliente - Identificación del cliente, horarios y proyectos.</p>
     </el-row>
     <el-row class="m-bottom-2">
       <el-col>

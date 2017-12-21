@@ -8,7 +8,7 @@
           <i class="fa fa-indent fa-flip-horizontal" v-else></i>
         </a>
       </div>
-      <div>
+      <div class="header-description">
         <p>Marca-app Sistema De Control Horario y Asistencia</p>
       </div>
       <div>
@@ -59,8 +59,8 @@
             </template>
             <el-menu-item :route="{name: 'clients'}" index="2-1">Lista Clientes</el-menu-item>
             <el-menu-item :route="{name: 'clientsDetail'}" index="2-2">Detalle Cliente</el-menu-item>
-            <el-menu-item index="2-3">Nuevo Cliente Empresa</el-menu-item>
-            <el-menu-item index="2-4">Nuevo Cliente Contacto</el-menu-item>
+            <el-menu-item :route="{name: 'clientsAddEmpresa'}" index="2-3">Nuevo Cliente Empresa</el-menu-item>
+            <el-menu-item :route="{name: 'clientsAddContact'}" index="2-4">Nuevo Cliente Contacto</el-menu-item>
         </el-submenu>
 
         <el-submenu index="3">
@@ -150,11 +150,7 @@ export default {
           this.$store.commit('deleteToken');
           this.loading = true;
           setTimeout(()=>{
-             if(this.$store.state.token === null){
-                 this.$router.replace('login');
-             }else{
-
-             }
+              this.$router.push('login');
               this.loading = false;
           }, 1000);
       },

@@ -17,7 +17,7 @@ const mutations = {
         state.token = data.token;
         state.name = data.name;
         state.avatar = data.avatar;
-        http.defaults.headers.common['Authorization'] = "Token "+data.token;
+        window.http.defaults.headers.common['Authorization'] = "Token "+data.token;
         if(data.remember === true){
             Vue.cookie.set('ma_tk_mp', data.token, { expires: '1D' });
         }else{
