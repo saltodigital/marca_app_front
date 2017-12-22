@@ -68,10 +68,10 @@
             <i class="fa fa-briefcase"></i>
             <span slot="title">Proyectos</span>
           </template>
-          <el-menu-item index="3-1">Lista Proyectos</el-menu-item>
-          <el-menu-item index="3-2">Detalle Proyecto</el-menu-item>
-          <el-menu-item index="3-3">Nuevo Proyecto</el-menu-item>
-          <el-menu-item index="3-4">Nuevo Contacto Proyecto</el-menu-item>
+          <el-menu-item :route="{name: 'projects'}" index="3-1">Lista Proyectos</el-menu-item>
+          <el-menu-item :route="{name: 'projectsDetail'}" index="3-2">Detalle Proyecto</el-menu-item>
+          <el-menu-item :route="{name: 'projectsAddProject'}" index="3-3">Nuevo Proyecto</el-menu-item>
+          <el-menu-item :route="{name: 'projectsAddContact'}" index="3-4">Nuevo Contacto Proyecto</el-menu-item>
         </el-submenu>
 
         <el-submenu index="4">
@@ -136,6 +136,9 @@ export default {
               break;
           case "clients":
               index = "2-1";
+              break;
+          case "projects":
+              index = "3-1";
               break;
           default:
               break;

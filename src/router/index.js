@@ -14,6 +14,12 @@ import ClientsDetail from '../components/Clients/Detail';
 import ClientsAddEmpresa from '../components/Clients/AddEmpresa';
 import ClientsAddContact from '../components/Clients/AddContact';
 
+//Projects
+import ProjectsList from '../components/Projects/List';
+import ProjectsDetail from '../components/Projects/Detail';
+import ProjectsAdd from '../components/Projects/AddProject';
+import ProjectsAddContact from '../components/Projects/AddProjectContact';
+
 Vue.use(Router);
 
 export default new Router({
@@ -50,11 +56,22 @@ export default new Router({
                 path: 'clients/contact',
                 name: 'clientsAddContact',
                 component: ClientsAddContact
-            },
-            {
+            },{
                 path: 'projects',
                 name: 'projects',
-                component: ClientsList
+                component: ProjectsList
+            },{
+                path: 'projects/detail',
+                name: 'projectsDetail',
+                component: ProjectsDetail
+            },{
+                path: 'projects/add',
+                name: 'projectsAddProject',
+                component: ProjectsAdd
+            },{
+                path: 'projects/contact',
+                name: 'projectsAddContact',
+                component: ProjectsAddContact
             },
             {
                 path: 'employees',
