@@ -39,53 +39,42 @@
     </el-row>
 
     <el-row :gutter="20" class="m-bottom-3">
-      <el-form label-position="top" :model="client_contact">
-        <el-col :xs="24" :sm="5">
-          <el-upload
-                  class="avatar-uploader"
-                  action="/"
-                  :show-file-list="false"
-                  :on-change="beforeImageUpload"
-                  :auto-upload="false"
-                  :on-success="handleImageSuccess">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-col>
+      <el-form label-position="top" :model="persona" :rules="persona_rules" ref="formPersona">
         <el-col :xs="24" :sm="6">
-          <el-form-item label="Nombre" class="fluid-width" prop="nombre">
-            <el-input v-model="client_contact.nombre"></el-input>
+          <el-form-item label="Nombres" class="fluid-width" prop="nombres">
+            <el-input v-model="persona.nombres"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
-          <el-form-item label="Apellido Materno" class="fluid-width" prop="apellido_materno">
-            <el-input v-model="client_contact.apellido_materno"></el-input>
+          <el-form-item label="Apellido Materno" class="fluid-width" prop="apellidoMaterno">
+            <el-input v-model="persona.apellidoMaterno"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
-          <el-form-item label="Apellido Paterno" class="fluid-width" prop="apellido_paterno">
-            <el-input v-model="client_contact.apellido_paterno"></el-input>
+          <el-form-item label="Apellido Paterno" class="fluid-width" prop="apellidoPaterno">
+            <el-input v-model="persona.apellidoPaterno"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
           <el-form-item label="RUT" class="fluid-width" prop="rut">
-            <el-input v-model="client_contact.rut"></el-input>
+            <el-input v-model="persona.rut"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
-          <el-form-item label="Fecha de nacimiento" class="fluid-width" prop="fecha_nacimiento">
+          <el-form-item label="Fecha de nacimiento" class="fluid-width" prop="fechaNacimiento">
             <el-date-picker
-                    v-model="client_contact.fecha_nacimiento"
+                    v-model="persona.fechaNacimiento"
                     type="date"
+                    format="dd-MM-yyyy"
                     placeholder="Seleccione">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
           <el-form-item label="Género" class="fluid-width" prop="genero">
-            <el-select v-model="client_contact.genero">
+            <el-select v-model="persona.genero">
               <el-option
-                      v-for="item in [{label: 'Masculino', value: 'masculino'},{label: 'Femenino', value: 'femenino'}]"
+                      v-for="item in generos"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -94,15 +83,10 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
-          <el-form-item label="Nacionalidad" class="fluid-width" prop="nacionalidad">
-            <el-input v-model="client_contact.nacionalidad"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Estado Civil" class="fluid-width" prop="estado_civil">
-            <el-select v-model="client_contact.estado_civil">
+          <el-form-item label="Estado Civil" class="fluid-width" prop="estadoCivil">
+            <el-select v-model="persona.estadoCivil">
               <el-option
-                      v-for="item in [{label: 'Soltero', value: 'soltero'},{label: 'Casado', value: 'casado'}]"
+                      v-for="item in estadosCivil"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -111,110 +95,137 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
-          <el-form-item label="Correo Electrónico" class="fluid-width" prop="correo_electronico">
-            <el-input v-model="client_contact.correo_electronico">contact</el-input>
+          <el-form-item label="Correo Electrónico" class="fluid-width" prop="correoElectronico">
+            <el-input v-model="persona.correoElectronico">contact</el-input>
           </el-form-item>
         </el-col>
-
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Teléfono Fijo" class="fluid-width" prop="telefono_fijo">
-            <el-input v-model="client_contact.telefono_fijo"></el-input>
+        <el-col :xs="24" :sm="4">
+          <el-form-item label="Teléfono Móvil" class="fluid-width" prop="telefonoMovil">
+            <el-input v-model="persona.telefonoMovil"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Teléfono Móvil 1" class="fluid-width" prop="telefono_movil_1">
-            <el-input v-model="client_contact.telefono_movil_1"></el-input>
+        <el-col :xs="24" :sm="5">
+          <el-form-item label="Teléfono Fijo" class="fluid-width" prop="telefonoFijo">
+            <el-input v-model="persona.telefonoFijo"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Teléfono Móvil 2" class="fluid-width" prop="telefono_movil_2">
-            <el-input v-model="client_contact.telefono_movil_2"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Cargo Informado" class="fluid-width" prop="cargo_informado">
-            <el-select v-model="client_contact.cargo_informado">
+        <el-col :xs="24" :sm="5">
+          <el-form-item label="País" class="fluid-width" prop="pais">
+            <el-select filterable v-model="persona.pais" @change="getEstados">
               <el-option
-                      v-for="item in []"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
+                      v-for="item in paises"
+                      :key="item.id"
+                      :label="item.nombre"
+                      :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="5">
+          <el-form-item label="Estado" class="fluid-width" prop="estado">
+            <el-select v-model="persona.estado"
+                       @change="getCiudades"
+                       :disabled="persona.pais === '' || persona.pais === null">
+              <el-option
+                      v-for="item in estados"
+                      :key="item.id"
+                      :label="item.nombre"
+                      :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="5">
+          <el-form-item label="Ciudad" class="fluid-width" prop="cuidad">
+            <el-select v-model="persona.ciudad" :disabled="persona.estado === '' || persona.estado === null">
+              <el-option
+                      v-for="item in ciudades"
+                      :key="item.id"
+                      :label="item.nombre"
+                      :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="24">
+          <el-button type="primary" @click="createContact">
+            Crear contacto
+          </el-button>
         </el-col>
       </el-form>
     </el-row>
-    <el-row>
-      <h3>Asignar Proyecto</h3>
-    </el-row>
+    <div v-if="contact_created">
+      <el-row>
+        <h3>Asignar Proyecto</h3>
+      </el-row>
 
-    <el-row class="m-bottom-2">
-      <el-col>
-        <span>Búsqueda de proyectos</span>
-        <el-select
-                v-model="selectedClient"
-                filterable
-                clearable
-                remote
-                reserve-keyword
-                placeholder="Buscar"
-                :remote-method="remoteMethod"
-                :loadingRemote="loadingRemote">
-          <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-          </el-option>
-        </el-select>
-        <el-button :disabled="!selectedClient" @click="handleEdit">
-          Asignar
+      <el-row class="m-bottom-2">
+        <el-col>
+          <span>Búsqueda de proyectos</span>
+          <el-select
+                  v-model="selectedClient"
+                  filterable
+                  clearable
+                  remote
+                  reserve-keyword
+                  placeholder="Buscar"
+                  :remote-method="remoteMethod"
+                  :loadingRemote="loadingRemote">
+            <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+            </el-option>
+          </el-select>
+          <el-button :disabled="!selectedClient" @click="handleEdit">
+            Asignar
+          </el-button>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-form label-position="top">
+          <el-col :xs="24" :sm="8">
+            <el-form-item label="Nombre Proyecto" class="fluid-width">
+              <el-input></el-input>
+            </el-form-item>
+            <el-row :gutter="20">
+              <el-col :xs="24" :sm="12">
+                <el-form-item label="Fecha Inicio" class="fluid-width">
+                  <el-date-picker
+                          v-model="client_horario.fecha_inicio"
+                          type="date"
+                          placeholder="Seleccione">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :xs="24" :sm="12">
+                <el-form-item label="Fecha Termino" class="fluid-width">
+                  <el-date-picker
+                          v-model="client_horario.fecha_termina"
+                          type="date"
+                          placeholder="Seleccione">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-col>
+
+          <el-col :xs="24" :sm="16">
+            <el-form-item label="Breve Descripción" class="fluid-width">
+              <el-input type="textarea" :rows="6"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
+
+      <el-row>
+        <el-button type="primary" class="float-right">
+          Guardar
         </el-button>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="20">
-      <el-form label-position="top">
-        <el-col :xs="24" :sm="8">
-          <el-form-item label="Nombre Proyecto" class="fluid-width">
-            <el-input></el-input>
-          </el-form-item>
-          <el-row :gutter="20">
-            <el-col :xs="24" :sm="12">
-              <el-form-item label="Fecha Inicio" class="fluid-width">
-                <el-date-picker
-                        v-model="client_horario.fecha_inicio"
-                        type="date"
-                        placeholder="Seleccione">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12">
-              <el-form-item label="Fecha Termino" class="fluid-width">
-                <el-date-picker
-                        v-model="client_horario.fecha_termina"
-                        type="date"
-                        placeholder="Seleccione">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-col>
-
-        <el-col :xs="24" :sm="16">
-          <el-form-item label="Breve Descripción" class="fluid-width">
-            <el-input type="textarea" :rows="6"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-form>
-    </el-row>
-
-    <el-row>
-      <el-button type="primary" class="float-right">
-        Guardar
-      </el-button>
-    </el-row>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -224,13 +235,84 @@ export default {
         this.list = this.clients.map(item => {
             return { value: item, label: item };
         });
-        /*
-        http.get('api/pais/').then(res=>{
-            console.log(res);
-        });*/
+
+        this.getPaises();
     },
     data () {
       return{
+          persona: {
+              nombres: '',
+              apellidoMaterno: '',
+              apellidoPaterno: '',
+              rut: '',
+              fechaNacimiento: '',
+              genero: '',
+              estadoCivil: '',
+              correoElectronico: '',
+              telefonoFijo: '',
+              telefonoMovil: '',
+              pais: '',
+              estado: '',
+              ciudad: ''
+          },
+          persona_rules: {
+              nombres: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              apellidoMaterno: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              apellidoPaterno: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              rut: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              fechaNacimiento: [
+                  {required: true, type: 'date', message: 'Selecciona una fecha válida'}
+              ],
+              genero: [
+                  {required: true, message: 'Seleccione una opción'}
+              ],
+              estadoCivil: [
+                  {required: true, message: 'Seleccione una opción'}
+              ],
+              correoElectronico: [
+                  {required: true, type: 'email', message: 'Escriba un correo válido'}
+              ],
+              telefonoFijo: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              telefonoMovil: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              pais: [
+                  {required: true, message: 'Seleccione una opción'}
+              ],
+              estado: [
+                  {required: true, message: 'Seleccione una opción'}
+              ],
+              ciudad: [
+                  {required: true, message: 'Seleccione una opción'}
+              ]
+
+          },
+          generos: [
+              {label: 'Masculino', value: '1'},
+              {label: 'Femenino', value: '2'},
+          ],
+          estadosCivil: [
+              {label: 'Casado', value: 'Casado'},
+              {label: 'Soltero', value: 'Soltero'},
+              {label: 'Divorciado', value: 'Divorciado'},
+              {label: 'Viudo', value: 'Viudo'},
+              {label: 'Otro', value: 'Otro'},
+          ],
+          contact_created: false,
+          paises: [],
+          estados: [],
+          ciudades: [],
+
           client_business: {
               nombre_empresa: '',
               nombre_fantasia: '',
@@ -340,8 +422,7 @@ export default {
               {nombre: 'Jornada laboral 2', cantidad_horas: 7.5, inicial: '09:00 AM', final: '17:30 PM', jornada: 'Viernes.', fecha_inicio: '01/01/16', fecha_final: '02/01/16'},
               {nombre: 'Colación', cantidad_horas: 1, inicial: '13:00 AM', final: '15:00 PM', jornada: 'Lunes; Martes; Miércoles; Jueves.', fecha_inicio: '01/01/16', fecha_final: '02/01/17'},
               {nombre: '17 Septiembre	', cantidad_horas: 5, inicial: '09:00 AM', final: '15:00 PM', jornada: 'Jueves', fecha_inicio: '17/09/16', fecha_final: '17/09/16'},
-          ],
-          imageUrl: null
+          ]
       }
     },
     methods: {
@@ -363,13 +444,27 @@ export default {
             this.action = 'edit';
             this.selectedClient = null;
         },
-        handleImageSuccess(res, file) {
-            console.log(file);
-            this.imageUrl = URL.createObjectURL(file.raw);
+        getPaises(){
+            http.get('api/pais/').then(res=>{
+                this.paises = res.data.data;
+            });
         },
-        beforeImageUpload(file, fileList) {
-            console.log(file);
-            this.imageUrl = URL.createObjectURL(file.raw);
+        getEstados(){
+            http.get('api/regiones/', {id: this.persona.pais}).then(res=>{
+                this.estados = res.data.data;
+            });
+        },
+        getCiudades(){
+            http.get('api/municipios/', {id: this.persona.estado}).then(res=>{
+                this.estados = res.data.data;
+            });
+        },
+        createContact(){
+            this.$refs.formPersona.validate(valid=>{
+               if(valid){
+                   this.$message.success('ok');
+               }
+            });
         }
     }
 }

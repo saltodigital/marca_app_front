@@ -40,7 +40,7 @@
     </el-row>
     <el-row :gutter="20" class="m-bottom-3">
       <el-form label-position="top" :model="client_contact">
-        <el-col :xs="24" :sm="5">
+        <el-col :xs="24" :sm="6">
           <el-upload
                   class="avatar-uploader"
                   action="/"
@@ -77,6 +77,7 @@
             <el-date-picker
                     v-model="client_contact.fecha_nacimiento"
                     type="date"
+                    format="dd-MM-yyyy"
                     placeholder="Seleccione">
             </el-date-picker>
           </el-form-item>
@@ -142,6 +143,9 @@
               </el-option>
             </el-select>
           </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="6">
+          <el-button class="form-item-space fluid-width" type="primary">Crear</el-button>
         </el-col>
       </el-form>
     </el-row>
@@ -268,7 +272,7 @@ export default {
 
           },
           client_contact: {
-              nombre: '',
+              nombres: '',
               apellido_materno: '',
               apellido_paterno: '',
               rut: '',

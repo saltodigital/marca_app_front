@@ -19,7 +19,7 @@
                 clearable
                 remote
                 reserve-keyword
-                placeholder="Buscar"
+                placeholder="Buscar cliente empresa"
                 :remote-method="remoteMethod"
                 :loadingRemote="loadingRemote">
           <el-option
@@ -166,7 +166,7 @@
                 clearable
                 remote
                 reserve-keyword
-                placeholder="Buscar"
+                placeholder="Buscar cliente contacto"
                 :remote-method="remoteMethod"
                 :loadingRemote="loadingRemote">
           <el-option
