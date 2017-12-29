@@ -17,6 +17,8 @@ export default {
     mounted(){
       if(this.$store.state.token === null){
           this.$router.replace('login');
+      }else {
+          this.$store.commit('onMounted');
       }
       this.loaded = true;
     }

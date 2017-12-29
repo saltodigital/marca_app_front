@@ -13,6 +13,10 @@ const state = {
 };
 
 const mutations = {
+    onMounted(){
+        window.http.defaults.headers.common['Authorization'] = "Token " + state.token;
+        //console.log('Token is in header: ' + state.token);
+    },
     setToken (state, data) {
         state.token = data.token;
         state.name = data.name;

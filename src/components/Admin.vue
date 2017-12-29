@@ -79,15 +79,11 @@
             <i class="fa fa-vcard"></i>
             <span slot="title">Trabajadores</span>
           </template>
-          <el-menu-item index="4-1">Novedades en Curso</el-menu-item>
-          <el-menu-item index="4-2">Resultados en Calendario</el-menu-item>
-          <el-menu-item index="4-3">Nuevo Cliente Empresa</el-menu-item>
-          <el-menu-item index="4-4">Nuevo Cliente Contacto</el-menu-item>
-          <el-submenu index="4-5">
-            <span slot="title">Resultado en Lista</span>
-            <el-menu-item index="4-5-1">Resultado Mensual</el-menu-item>
-          </el-submenu>
-          <el-menu-item index="4-6">Solicitudes</el-menu-item>
+          <el-menu-item index="4-1" :route="{name: 'employees'}">Novedades en Curso</el-menu-item>
+          <el-menu-item index="4-2" :route="{name: 'employeesCalendar'}">Resultados en Calendario</el-menu-item>
+          <el-menu-item index="4-3" :route="{name: 'employeesList'}">Resultado en Lista Trabajadores</el-menu-item>
+          <el-menu-item index="4-4" :route="{name: 'employeesMonth'}">Resultado Mensual</el-menu-item>
+          <el-menu-item index="4-5" :route="{name: 'employeesRequest'}">Solicitudes</el-menu-item>
         </el-submenu>
 
       </el-menu>
@@ -139,6 +135,9 @@ export default {
               break;
           case "projects":
               index = "3-1";
+              break;
+          case "employees":
+              index = "4-1";
               break;
           default:
               break;

@@ -20,6 +20,13 @@ import ProjectsDetail from '../components/Projects/Detail';
 import ProjectsAdd from '../components/Projects/AddProject';
 import ProjectsAddContact from '../components/Projects/AddProjectContact';
 
+//Employers
+import Features from '../components/Employers/Features';
+import ResultCalendar from '../components/Employers/ResultCalendar';
+import ResultList from '../components/Employers/ResultList';
+import ResultMonth from '../components/Employers/ResultMonth';
+import Requests from '../components/Employers/Requests';
+
 Vue.use(Router);
 
 export default new Router({
@@ -72,11 +79,26 @@ export default new Router({
                 path: 'projects/contact',
                 name: 'projectsAddContact',
                 component: ProjectsAddContact
-            },
-            {
+            },{
                 path: 'employees',
                 name: 'employees',
-                component: ClientsList
+                component: Features
+            },{
+                path: 'employees/calendar',
+                name: 'employeesCalendar',
+                component: ResultCalendar
+            },{
+                path: 'employees/list',
+                name: 'employeesList',
+                component: ResultList
+            },{
+                path: 'employees/month',
+                name: 'employeesMonth',
+                component: ResultMonth
+            },{
+                path: 'employees/request',
+                name: 'employeesRequest',
+                component: Requests
             }
         ]
     },
