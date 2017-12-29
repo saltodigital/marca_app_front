@@ -86,6 +86,15 @@
           <el-menu-item index="4-5" :route="{name: 'employeesRequest'}">Solicitudes</el-menu-item>
         </el-submenu>
 
+          <el-submenu index="5">
+            <template slot="title">
+              <i class="fa fa-puzzle-piece"></i>
+              <span slot="title">Configuraciones</span>
+            </template>
+            <el-menu-item index="5-1" :route="{name: 'positions'}">Cargos</el-menu-item>
+            <el-menu-item index="5-2" :route="{name: 'locations'}">Ubicaciones</el-menu-item>
+          </el-submenu>
+
       </el-menu>
     </el-col>
 

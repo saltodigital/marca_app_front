@@ -66,7 +66,7 @@ export default {
                     }).catch((err)=>{
                         this.loading = false;
                         this.$message({
-                            message: err.response.data.non_field_errors ? err.response.data.non_field_errors[0] : 'No puede iniciar sesión con las credenciales proporcionadas.',
+                            message: err.response && err.response.data.non_field_errors ? err.response.data.non_field_errors[0] : 'No puede iniciar sesión con las credenciales proporcionadas.',
                             type: 'warning'
                         });
                     });

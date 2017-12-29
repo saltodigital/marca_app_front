@@ -27,6 +27,10 @@ import ResultList from '../components/Employers/ResultList';
 import ResultMonth from '../components/Employers/ResultMonth';
 import Requests from '../components/Employers/Requests';
 
+//Setting
+import Positions from '../components/Config/Positions';
+import Countries from '../components/Config/Countries';
+
 Vue.use(Router);
 
 export default new Router({
@@ -99,6 +103,14 @@ export default new Router({
                 path: 'employees/request',
                 name: 'employeesRequest',
                 component: Requests
+            },{
+                path: 'config/positions',
+                name: 'positions',
+                component: Positions
+            },{
+                path: 'config/locations',
+                name: 'locations',
+                component: Countries
             }
         ]
     },
