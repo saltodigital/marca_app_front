@@ -4,11 +4,12 @@
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">Inicio</el-breadcrumb-item>
         <el-breadcrumb-item>Configuraciones</el-breadcrumb-item>
-        <el-breadcrumb-item>Países</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/config/locations/'}">Países</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ country.nombre ? 'Regiones de ' + country.nombre : '' }}</el-breadcrumb-item>
       </el-breadcrumb>
     </el-row>
     <el-row class="m-bottom-1">
-      <p>Administración de países.</p>
+      <p>Administración de regiones.</p>
     </el-row>
     <el-row class="m-bottom-1">
       <el-col :xs="24" :sm="12">
@@ -19,13 +20,13 @@
       <el-col :xs="24" :sm="12" class="text-right">
         <el-button type="primary" size="small" @click="handleNew">Nuevo</el-button>
         <el-dialog
-                :title="action === 'new' ? 'Nuevo país' : 'Editar país'"
+                :title="action === 'new' ? 'Nueva Región' : 'Editar región'"
                 :visible.sync="visibleDialog"
                 @close="handleCloseDialog"
                 width="30%"
                 center>
           <el-form @submit.prevent.native="handleSave" :model="item" :rules="itemRules" label-position="top" ref="itemForm">
-            <el-form-item prop="nombre" label="Nombre del país" class="fluid-width">
+            <el-form-item prop="nombre" label="Nombre de la región" class="fluid-width">
               <el-input v-model="item.nombre"></el-input>
             </el-form-item>
             <el-button :loading="loadingSave" type="primary" @click="handleSave">Guardar</el-button>
@@ -50,7 +51,7 @@
         <el-table-column
                 label="Nombre">
           <template slot-scope="scope">
-            <router-link :to="{ name: 'regions', params: { id: scope.row.id }}">
+            <router-link :to="{ name: 'municipalities', params: { id: scope.row.id }}">
               {{ scope.row.nombre }}
             </router-link>
           </template>
@@ -88,6 +89,7 @@
 <script>
 export default {
     mounted(){
+        this.getCountry();
         this.getData();
     },
     data () {
@@ -101,11 +103,11 @@ export default {
           item: {
               id: null,
               nombre: '',
-              validaRut: '0-9'
+              pais_id: this.$route.params.id
           },
           itemRules: {
               nombre: [
-                  {required: true, message: 'Debes ingresar un nombre para el país'}
+                  {required: true, message: 'Debes ingresar un nombre para la región'}
               ]
           },
           pagination: {
@@ -116,16 +118,26 @@ export default {
               prev: null,
               search: ''
           },
-          selectedId: null
+          selectedId: null,
+
+          country: {
+              nombre: ''
+          }
     }
   },
   methods: {
+        getCountry(){
+          http.get('api/pais/' + this.$route.params.id + '/').then(res=>{
+              this.country = res.data.data;
+          });
+        },
         getData(){
             this.loading = true;
-            http.get('api/pais/', {
+            http.get('api/regiones/', {
                 params: {
                     page: this.pagination.currentPage,
-                    dato: this.pagination.search
+                    dato: this.pagination.search,
+                    id_pais: this.$route.params.id
                 }
             }).then(res=>{
                 this.pagination.next = res.data.next;
@@ -164,11 +176,11 @@ export default {
         },
         handleSave(){
             this.$refs.itemForm.validate(valid=>{
-                this.item.validaRut = '0-9';
+                this.item.pais_id = this.$route.params.id;
                if(valid){
                    this.loadingSave = true;
                    if(this.action === 'new'){
-                       http.post('api/pais/', this.item).then(res=>{
+                       http.post('api/regiones/', this.item).then(res=>{
                            this.loadingSave = false;
                            this.getData();
                            this.visibleDialog = false;
@@ -177,7 +189,7 @@ export default {
                            this.$notify.error({message: 'Complete los campos requeridos'});
                        });
                    }else if(this.action === 'edit'){
-                       http.put('api/pais/'+this.item.id+'/', this.item).then(res=>{
+                       http.put('api/regiones/'+this.item.id+'/', this.item).then(res=>{
                            this.loadingSave = false;
                            this.getData();
                            this.visibleDialog = false;
@@ -204,14 +216,14 @@ export default {
         },
         deleteItem(){
             this.loadingSave = true;
-            http.delete('api/pais/' + this.selectedId + '/').then(res=>{
+            http.delete('api/regiones/' + this.selectedId + '/').then(res=>{
                 this.getData();
                 this.loadingSave = false;
                 this.visibleDialogConfirm = false;
             }).catch(()=>{
                 this.loadingSave = false;
                 this.visibleDialogConfirm = false;
-                this.$notify.error({message: 'No fue posible eliminar el país seleccionado'});
+                this.$notify.error({message: 'No fue posible eliminar la región seleccionada'});
             })
         }
   }

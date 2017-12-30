@@ -30,6 +30,8 @@ import Requests from '../components/Employers/Requests';
 //Setting
 import Positions from '../components/Config/Positions';
 import Countries from '../components/Config/Countries';
+import Regions from '../components/Config/Regions';
+import Municipalities from '../components/Config/Municipalities';
 
 Vue.use(Router);
 
@@ -111,6 +113,14 @@ export default new Router({
                 path: 'config/locations',
                 name: 'locations',
                 component: Countries
+            },{
+                path: 'config/locations/:id/regions',
+                name: 'regions',
+                component: Regions
+            },{
+                path: 'config/locations/:id/municipalities',
+                name: 'municipalities',
+                component: Municipalities
             }
         ]
     },
