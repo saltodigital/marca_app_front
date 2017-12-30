@@ -20,13 +20,14 @@
                 remote
                 reserve-keyword
                 placeholder="Buscar"
-                :remote-method="remoteMethod"
+                @change="remoteClientChange"
+                :remote-method="remoteClient"
                 :loadingRemote="loadingRemote">
           <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+                  v-for="item in remoteClients"
+                  :key="item.id"
+                  :label="item.nombre"
+                  :value="item.id">
           </el-option>
         </el-select>
         <el-button :disabled="!selectedClient" @click="handleEdit">
@@ -37,49 +38,33 @@
     <el-row>
       <h3>Detalle - Cliente Empresa</h3>
     </el-row>
-    <el-row :gutter="20">
-      <el-form label-position="top" :model="client_business">
-        <el-col :xs="24" :sm="5">
-          <el-upload
-                  class="avatar-uploader"
-                  action="/"
-                  :show-file-list="false"
-                  :on-change="beforeImageUpload"
-                  :auto-upload="false"
-                  :on-success="handleImageSuccess">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-col>
-        <el-col :xs="24" :sm="7">
-          <el-form-item label="Nombre empresa" class="fluid-width" prop="nombre_empresa">
-            <el-input v-model="client_business.nombre_empresa"></el-input>
+    <el-row :gutter="20" class="m-bottom-2">
+      <el-form label-position="top" :model="empresa" :rules="empresaRules" ref="formEmpresa">
+        <el-col :xs="24" :sm="6">
+          <el-form-item label="Nombre empresa" class="fluid-width" prop="nombre">
+            <el-input v-model="empresa.nombre"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
           <el-form-item label="Nombre fantasia" class="fluid-width" prop="nombre_fantasia">
-            <el-input v-model="client_business.nombre_fantasia"></el-input>
+            <el-input v-model="empresa.nombre_fantasia"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
           <el-form-item label="RUT" class="fluid-width" prop="rut">
-            <el-input v-model="client_business.rut"></el-input>
+            <el-input v-model="empresa.rut"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="7">
-          <el-form-item label="Fecha de registro" class="fluid-width" prop="fecha_registro">
-            <el-date-picker
-                    v-model="client_business.fecha_registro"
-                    type="date"
-                    placeholder="Seleccione">
-            </el-date-picker>
+        <el-col :xs="24" :sm="6">
+          <el-form-item label="Correo Electrónico" class="fluid-width" prop="correoElectronico">
+            <el-input v-model="empresa.correoElectronico"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
           <el-form-item label="Estado del cliente" class="fluid-width" prop="estado_cliente">
-            <el-select v-model="client_business.estado_cliente">
+            <el-select v-model="empresa.estado_cliente">
               <el-option
-                      v-for="item in status"
+                      v-for="item in [{value: '1', label: 'Activo'}, {value: '2', label: 'Inactivo'}]"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -90,86 +75,111 @@
         <el-col :xs="24" :sm="6">
           <el-form-item label="Fecha Estado del Proyecto" class="fluid-width" prop="fecha_estado">
             <el-date-picker
-                    v-model="client_business.fecha_estado"
+                    v-model="empresa.fecha_estado"
                     type="date"
+                    format="dd-MM-yyyy"
                     placeholder="Seleccione">
             </el-date-picker>
           </el-form-item>
         </el-col>
+        <el-col :xs="24" :sm="6">
+          <el-form-item label="Teléfono" class="fluid-width" prop="telefono">
+            <el-input v-model="empresa.telefono"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="6">
+          <el-form-item label="Teléfono Fijo" class="fluid-width" prop="telefonoFijo">
+            <el-input v-model="empresa.telefonoFijo"></el-input>
+          </el-form-item>
+        </el-col>
         <el-col :xs="24" :sm="5">
           <el-form-item label="País" class="fluid-width" prop="pais">
-            <el-select v-model="client_business.pais">
+            <el-select v-model="empresa.pais" @change="onChangePais">
               <el-option
                       v-for="item in countries"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
+                      :key="item.id"
+                      :label="item.nombre"
+                      :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="5">
           <el-form-item label="Región" class="fluid-width" prop="region">
-            <el-select v-model="client_business.region">
+            <el-select v-model="empresa.region" :disabled="empresa.pais === '' || !empresa.pais" @change="onChangeRegion">
               <el-option
                       v-for="item in regions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
+                      :key="item.id"
+                      :label="item.nombre"
+                      :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="5">
-          <el-form-item label="Ciudad" class="fluid-width" prop="ciudad">
-            <el-select v-model="client_business.ciudad">
+          <el-form-item label="Ciudad" class="fluid-width" prop="municipio_id">
+            <el-select v-model="empresa.municipio_id" :disabled="empresa.region === '' || !empresa.region">
               <el-option
-                      v-for="item in cities"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
+                      v-for="item in municipalities"
+                      :key="item.id"
+                      :label="item.nombre"
+                      :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="5">
-          <el-form-item label="Nombre Calle" class="fluid-width" prop="calle">
-            <el-input placeholder="Buscar calle..." v-model="client_business.calle">
+          <el-form-item label="Nombre Calle" class="fluid-width" prop="direccion">
+            <el-input placeholder="Buscar calle..." v-model="empresa.direccion">
               <el-button slot="append" icon="el-icon-location"></el-button>
             </el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="4">
           <el-form-item label="Número" class="fluid-width" prop="numero">
-            <el-input-number :controls="false" v-model="client_business.numero"></el-input-number>
+            <el-input v-model="empresa.numero"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
           <el-form-item label="Latitude" class="fluid-width" prop="latitud">
-            <el-input v-model="client_business.latitud"></el-input>
+            <el-input v-model="empresa.latitud"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
           <el-form-item label="Longitud" class="fluid-width" prop="longitud">
-            <el-input v-model="client_business.longitud"></el-input>
+            <el-input v-model="empresa.longitud"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
           <el-form-item label="Código Postal" class="fluid-width" prop="codigo_postal">
-            <el-input v-model="client_business.codigo_postal"></el-input>
+            <el-input v-model="empresa.codigo_postal"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
           <el-form-item label="IP" class="fluid-width" prop="ip">
-            <el-input v-model="client_business.ip"></el-input>
+            <el-input v-model="empresa.ip"></el-input>
           </el-form-item>
         </el-col>
       </el-form>
     </el-row>
-    <el-row>
+
+    <el-row class="m-bottom-2">
+      <el-col :xs="24" :sm="12">
+        <el-checkbox v-model="add_contact">Asignar contacto</el-checkbox>
+        <el-checkbox v-model="add_schedule">Asignar horario</el-checkbox>
+      </el-col>
+      <el-col :xs="24" :sm="12">
+        <el-button type="primary" class="float-right" @click="saveEmpresa" :loading="loading">
+          Guardar
+        </el-button>
+      </el-col>
+    </el-row>
+
+    <!-- Contact -->
+    <el-row v-if="add_contact">
       <h3>Asignar - Cliente Contacto</h3>
     </el-row>
-    <el-row class="m-bottom-2">
+    <el-row class="m-bottom-2" v-if="add_contact">
       <el-col>
         <span>Búsqueda de Cliente Contacto</span>
         <el-select
@@ -193,7 +203,7 @@
         </el-button>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
+    <el-row :gutter="20" v-if="add_contact">
       <el-form label-position="top" :model="client_contact">
         <el-col :xs="24" :sm="6">
           <el-form-item label="Nombre" class="fluid-width" prop="nombre">
@@ -288,10 +298,13 @@
         </el-col>
       </el-form>
     </el-row>
-    <el-row>
+    <!-- End Contact -->
+
+    <!-- Schedule -->
+    <el-row v-if="add_schedule">
       <h3>Horario del Cliente</h3>
     </el-row>
-    <el-row :gutter="20">
+    <el-row :gutter="20" v-if="add_schedule">
       <el-form label-position="top">
         <el-col :xs="24" :sm="5">
           <el-form-item label="Nombre Condición">
@@ -350,10 +363,10 @@
         </el-col>
       </el-form>
     </el-row>
-    <el-row class="m-bottom-1">
+    <el-row class="m-bottom-1" v-if="add_schedule">
       <p>Vista Horario - Jornada Diaria y especial de asignaciones del cliente.</p>
     </el-row>
-    <el-row class="m-bottom-2">
+    <el-row class="m-bottom-2" v-if="add_schedule">
       <el-table
               :data="tableData"
               style="width: 100%">
@@ -387,45 +400,73 @@
         </el-table-column>
       </el-table>
     </el-row>
-    <el-row>
-      <el-button type="primary" class="float-right">
-        Guardar
-      </el-button>
-    </el-row>
+    <!-- Schedule -->
   </div>
 </template>
 
 <script>
 export default {
-    mounted(){
-        this.list = this.clients.map(item => {
-            return { value: item, label: item };
-        });
-        /*
-        http.get('api/pais/').then(res=>{
-            console.log(res);
-        });*/
-    },
     data () {
       return{
-          client_business: {
-              nombre_empresa: '',
-              nombre_fantasia: '',
+          loading: false,
+          add_contact: false,
+          add_schedule: false,
+          remoteClients: [],
+          selectedClient: null,
+          selectedClientData: null,
+
+          empresa: {
+              id: null,
+              nombre: '',
               rut: '',
+              direccion: '',
+              correoElectronico: '',
+              telefono: '',
+              telefonoFijo: '',
+              municipio_id: '',
+              field: 'Empresa',
+              region: '',
+              pais: '',
+
+              nombre_fantasia: '',
               fecha_registro: '',
               estado_cliente: '',
               fecha_estado: '',
-              pais: '',
-              region: '',
               ciudad: '',
-              calle: '',
               numero: '',
               latitud: '',
               longitud: '',
               codigo_postal: '',
               ip: '',
-
           },
+          empresaRules: {
+              nombre: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              rut: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              direccion: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              correoElectronico: [
+                  {required: true, type: 'email', message: 'Campo requerido'}
+              ],
+              telefono: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              pais: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              region: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              municipio_id: [
+                  {required: true, message: 'Campo requerido'}
+              ]
+          },
+          regionLoaded: false,
+
           client_contact: {
               nombre: '',
               apellido_materno: '',
@@ -450,7 +491,6 @@ export default {
               dias: []
           },
           options: [],
-          selectedClient: null,
           selectedClientContact: null,
           list: [],
           loadingRemote: false,
@@ -481,7 +521,7 @@ export default {
           }],
           countries: [],
           regions: [],
-          cities: [],
+          municipalities: [],
           dias: [
               {
                   label: 'Lunes',
@@ -521,32 +561,119 @@ export default {
           imageUrl: null
       }
     },
+    mounted(){
+        this.getCountries();
+    },
+    watch: {
+        regionLoaded: function (val) {
+            this.getMunicipalities();
+        }
+    },
     methods: {
-        remoteMethod(query) {
-            if (query !== '') {
+        remoteClient(query) {
+            if (query !== '' && query.length >= 2) {
                 this.loadingRemote = true;
-                setTimeout(() => {
-                    this.loadingRemote = false;
-                    this.options = this.list.filter(item => {
-                        return item.label.toLowerCase()
-                            .indexOf(query.toLowerCase()) > -1;
-                    });
-                }, 200);
+                http.get('api/empresas/', {
+                    params: {
+                        dato: query,
+                        sin_paginacion: true
+                    }
+                }).then(res=>{
+                    this.remoteClients = res.data.data;
+                }).catch(err=>{
+                    this.remoteClients = [];
+                });
             } else {
-                this.options = [];
+                this.remoteClients = [];
             }
+        },
+        getCountries(){
+            http.get('api/pais/', {
+                params: {
+                    sin_paginacion: true
+                }
+            }).then(res=>{
+                this.countries = res.data.results.data;
+            });
+        },
+        getRegions(){
+            http.get('api/regiones/', {
+                params: {
+                    sin_paginacion: true,
+                    id_pais: this.empresa.pais
+                }
+            }).then(res=>{
+                this.regions = res.data.results.data;
+                this.regionLoaded = !this.regionLoaded;
+            });
+        },
+        getMunicipalities(){
+            http.get('api/municipios/', {
+                params: {
+                    sin_paginacion: true,
+                    id_region: this.empresa.region
+                }
+            }).then(res=>{
+                this.municipalities = res.data.results.data;
+            });
+        },
+        onChangePais(){
+            this.regions = [];
+            this.municipalities = [];
+            this.empresa.region = '';
+            this.empresa.municipio_id = '';
+            this.getRegions();
+        },
+        onChangeRegion(){
+            this.municipalities = [];
+            this.empresa.municipio_id = '';
+            this.getMunicipalities();
         },
         handleEdit(){
             this.action = 'edit';
             this.selectedClient = null;
+            this.empresa = {
+                id: this.selectedClientData.id,
+                nombre: this.selectedClientData.nombre,
+                rut: this.selectedClientData.rut,
+                direccion: this.selectedClientData.direccion,
+                correoElectronico: this.selectedClientData.correoElectronico,
+                telefono: this.selectedClientData.telefono,
+                telefonoFijo: this.selectedClientData.telefonoFijo,
+                municipio_id: this.selectedClientData.municipio.id,
+                region: this.selectedClientData.municipio.region.id,
+                pais: this.selectedClientData.municipio.region.pais.id
+            };
+            this.getRegions();
         },
-        handleImageSuccess(res, file) {
-            console.log(file);
-            this.imageUrl = URL.createObjectURL(file.raw);
+        remoteClientChange(val){
+            this.selectedClientData = this.remoteClients.find((item)=>{
+                return item.id === val;
+            });
         },
-        beforeImageUpload(file, fileList) {
-            console.log(file);
-            this.imageUrl = URL.createObjectURL(file.raw);
+        saveEmpresa(){
+            this.$refs.formEmpresa.validate(valid=>{
+               if(valid){
+                   this.loading = true;
+                   if(this.action === 'add'){
+                       http.post('api/empresas/', this.empresa).then(res=>{
+                           this.loading = false;
+                           this.$refs.formEmpresa.resetFields();
+                       }).catch(err=>{
+                           this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
+                           this.loading = false;
+                       });
+                   }else{
+                       http.put('api/empresas/'+ this.empresa.id + '/', this.empresa).then(res=>{
+                           this.loading = false;
+                           this.$refs.formEmpresa.resetFields();
+                       }).catch(err=>{
+                           this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
+                           this.loading = false;
+                       });
+                   }
+               }
+            });
         }
     }
 }

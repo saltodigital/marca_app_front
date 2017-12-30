@@ -3,11 +3,12 @@
     <el-row class="m-bottom-1">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">Inicio</el-breadcrumb-item>
-        <el-breadcrumb-item>Proyectos</el-breadcrumb-item>
+        <el-breadcrumb-item>Trabajadores</el-breadcrumb-item>
+        <el-breadcrumb-item>Solicitudes</el-breadcrumb-item>
       </el-breadcrumb>
     </el-row>
     <el-row class="m-bottom-1">
-      <p>Vista Por Cliente - Identifica Proyectos, Configuración Horaria y Recursos Asignados.</p>
+      <p>Solicitudes de trabajadores.</p>
     </el-row>
     <el-row>
       <el-table
@@ -15,78 +16,58 @@
               style="width: 100%">
         <el-table-column
                 fixed
-                prop="cliente"
-                label="Cliente"
+                prop="solicitud"
+                label="Solicitud"
                 width="180">
         </el-table-column>
         <el-table-column
-                prop="proyectos"
-                label="Proyectos"
+                prop="estado"
+                label="Estado"
                 width="180">
         </el-table-column>
         <el-table-column
                 width="160"
-                prop="contacto"
-                label="Contacto">
+                prop="desde"
+                label="Desde">
         </el-table-column>
         <el-table-column
                 width="160"
-                prop="direccion"
-                label="Dirección">
+                prop="hasta"
+                label="Hasta">
         </el-table-column>
         <el-table-column
                 width="100"
-                prop="ciudad"
-                label="Ciudad">
+                prop="dias"
+                label="Días">
         </el-table-column>
         <el-table-column
                 width="100"
-                prop="provincia"
-                label="Provincia">
+                prop="horas"
+                label="Horas">
         </el-table-column>
         <el-table-column
                 width="100"
-                prop="pais"
-                label="País">
-        </el-table-column>
-        <el-table-column label="Hoy">
-          <el-table-column
-                  width="120"
-                  prop="trabajadores"
-                  label="Trabajadores">
-          </el-table-column>
-          <el-table-column
-                  width="120"
-                  label="Puntualidad">
-              <template slot-scope="scope">
-              <span class="score score-red" v-if="scope.row.puntualidad < 90"></span>
-              <span class="score score-yellow" v-else-if="scope.row.puntualidad >= 90 && scope.row.puntualidad < 100"></span>
-              <span class="score score-green" v-else=""></span>
-              {{ scope.row.puntualidad }}%
-            </template>
-          </el-table-column>
-        </el-table-column>
-        <el-table-column label="Mensual en curso">
-          <el-table-column
-                  width="120"
-                  prop="trabajadores2"
-                  label="Trabajadores">
-          </el-table-column>
-          <el-table-column
-                  width="120"
-                  label="Puntualidad">
-            <template slot-scope="scope">
-              <span class="score score-red" v-if="scope.row.puntualidad2 < 90"></span>
-              <span class="score score-yellow" v-else-if="scope.row.puntualidad2 >= 90 && scope.row.puntualidad2 < 100"></span>
-              <span class="score score-green" v-else=""></span>
-              {{ scope.row.puntualidad2 }}%
-            </template>
-          </el-table-column>
+                label="Apr">
+          <template slot-scope="scope">
+            <i class="fa fa-check text-success"></i>
+          </template>
         </el-table-column>
         <el-table-column
-                width="160"
+                width="100"
                 prop="supervisor"
                 label="Supervisor">
+        </el-table-column>
+        <el-table-column
+                width="100"
+                label="Apr">
+          <template slot-scope="scope">
+            <i class="fa fa-check text-success"></i>
+          </template>
+        </el-table-column>
+        <el-table-column
+                width="100"
+                prop="aprueba"
+                label="Aprueba">
         </el-table-column>
       </el-table>
     </el-row>
@@ -100,122 +81,104 @@ export default {
     data () {
       return {
           tableData: [{
-              cliente: 'P001 Falabella',
-              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
-              contacto: 'Alfredo Perez',
-              direccion: 'Rosas # 1850',
-              ciudad: 'Santiago',
-              provincia: 'Santiago',
-              pais: 'Chile',
-              trabajadores: '22',
-              puntualidad: '75',
-              trabajadores2: '22',
-              puntualidad2: '75',
-              supervisor: 'JBerrios',
+              solicitud: 'Feriado Legal',
+              estado: 'Pendiente',
+              desde: '07-08-2017',
+              hasta: '07-09-2017',
+              dias: '10 Días',
+              horas: '4 horas',
+              aprobado: true,
+              supervisor: 'jberrios',
+              aprobado2: true,
+              aprueba: 'Hperez'
           }, {
-              cliente: 'P001 Falabella',
-              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
-              contacto: 'Alfredo Perez',
-              direccion: 'Rosas # 1850',
-              ciudad: 'Santiago',
-              provincia: 'Santiago',
-              pais: 'Chile',
-              trabajadores: '22',
-              puntualidad: '92',
-              trabajadores2: '22',
-              puntualidad2: '75',
-              supervisor: 'JBerrios',
+              solicitud: 'Feriado Legal',
+              estado: 'Pendiente',
+              desde: '07-08-2017',
+              hasta: '07-09-2017',
+              dias: '10 Días',
+              horas: '4 horas',
+              aprobado: true,
+              supervisor: 'jberrios',
+              aprobado2: true,
+              aprueba: 'Hperez'
           }, {
-              cliente: 'P001 Falabella',
-              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
-              contacto: 'Alfredo Perez',
-              direccion: 'Rosas # 1850',
-              ciudad: 'Santiago',
-              provincia: 'Santiago',
-              pais: 'Chile',
-              trabajadores: '22',
-              puntualidad: '100',
-              trabajadores2: '22',
-              puntualidad2: '75',
-              supervisor: 'JBerrios',
+              solicitud: 'Feriado Legal',
+              estado: 'Pendiente',
+              desde: '07-08-2017',
+              hasta: '07-09-2017',
+              dias: '10 Días',
+              horas: '4 horas',
+              aprobado: true,
+              supervisor: 'jberrios',
+              aprobado2: true,
+              aprueba: 'Hperez'
           }, {
-              cliente: 'P001 Falabella',
-              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
-              contacto: 'Alfredo Perez',
-              direccion: 'Rosas # 1850',
-              ciudad: 'Santiago',
-              provincia: 'Santiago',
-              pais: 'Chile',
-              trabajadores: '22',
-              puntualidad: '75',
-              trabajadores2: '22',
-              puntualidad2: '75',
-              supervisor: 'JBerrios',
+              solicitud: 'Feriado Legal',
+              estado: 'Pendiente',
+              desde: '07-08-2017',
+              hasta: '07-09-2017',
+              dias: '10 Días',
+              horas: '4 horas',
+              aprobado: true,
+              supervisor: 'jberrios',
+              aprobado2: true,
+              aprueba: 'Hperez'
           }, {
-              cliente: 'P001 Falabella',
-              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
-              contacto: 'Alfredo Perez',
-              direccion: 'Rosas # 1850',
-              ciudad: 'Santiago',
-              provincia: 'Santiago',
-              pais: 'Chile',
-              trabajadores: '22',
-              puntualidad: '75',
-              trabajadores2: '22',
-              puntualidad2: '75',
-              supervisor: 'JBerrios',
+              solicitud: 'Feriado Legal',
+              estado: 'Pendiente',
+              desde: '07-08-2017',
+              hasta: '07-09-2017',
+              dias: '10 Días',
+              horas: '4 horas',
+              aprobado: true,
+              supervisor: 'jberrios',
+              aprobado2: true,
+              aprueba: 'Hperez'
           }, {
-              cliente: 'P001 Falabella',
-              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
-              contacto: 'Alfredo Perez',
-              direccion: 'Rosas # 1850',
-              ciudad: 'Santiago',
-              provincia: 'Santiago',
-              pais: 'Chile',
-              trabajadores: '22',
-              puntualidad: '75',
-              trabajadores2: '22',
-              puntualidad2: '75',
-              supervisor: 'JBerrios',
+              solicitud: 'Feriado Legal',
+              estado: 'Pendiente',
+              desde: '07-08-2017',
+              hasta: '07-09-2017',
+              dias: '10 Días',
+              horas: '4 horas',
+              aprobado: true,
+              supervisor: 'jberrios',
+              aprobado2: true,
+              aprueba: 'Hperez'
           }, {
-              cliente: 'P001 Falabella',
-              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
-              contacto: 'Alfredo Perez',
-              direccion: 'Rosas # 1850',
-              ciudad: 'Santiago',
-              provincia: 'Santiago',
-              pais: 'Chile',
-              trabajadores: '22',
-              puntualidad: '75',
-              trabajadores2: '22',
-              puntualidad2: '75',
-              supervisor: 'JBerrios',
+              solicitud: 'Feriado Legal',
+              estado: 'Pendiente',
+              desde: '07-08-2017',
+              hasta: '07-09-2017',
+              dias: '10 Días',
+              horas: '4 horas',
+              aprobado: true,
+              supervisor: 'jberrios',
+              aprobado2: true,
+              aprueba: 'Hperez'
           }, {
-              cliente: 'P001 Falabella',
-              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
-              contacto: 'Alfredo Perez',
-              direccion: 'Rosas # 1850',
-              ciudad: 'Santiago',
-              provincia: 'Santiago',
-              pais: 'Chile',
-              trabajadores: '22',
-              puntualidad: '75',
-              trabajadores2: '22',
-              puntualidad2: '75',
-              supervisor: 'JBerrios',
+              solicitud: 'Feriado Legal',
+              estado: 'Pendiente',
+              desde: '07-08-2017',
+              hasta: '07-09-2017',
+              dias: '10 Días',
+              horas: '4 horas',
+              aprobado: true,
+              supervisor: 'jberrios',
+              aprobado2: true,
+              aprueba: 'Hperez'
           }, {
-              cliente: 'P001 Falabella',
-              proyectos: 'Modificaciones al WS de Alta cuenta y cliente',
-              contacto: 'Alfredo Perez',
-              direccion: 'Rosas # 1850',
-              ciudad: 'Santiago',
-              provincia: 'Santiago',
-              pais: 'Chile',
-              trabajadores: '22',
-              puntualidad: '75',
-              trabajadores2: '22',
-              puntualidad2: '75',
-              supervisor: 'JBerrios',
+              solicitud: 'Feriado Legal',
+              estado: 'Pendiente',
+              desde: '07-08-2017',
+              hasta: '07-09-2017',
+              dias: '10 Días',
+              horas: '4 horas',
+              aprobado: true,
+              supervisor: 'jberrios',
+              aprobado2: true,
+              aprueba: 'Hperez'
           }]
 
     }
