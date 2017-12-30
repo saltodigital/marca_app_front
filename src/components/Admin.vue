@@ -148,6 +148,12 @@ export default {
           case "employees":
               index = "4-1";
               break;
+          case "clientsAddEmpresa":
+              index = "2-3";
+              break;
+            case "clientsDetail":
+              index = "2-2";
+              break;
           default:
               break;
       }

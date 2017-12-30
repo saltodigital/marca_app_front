@@ -76,7 +76,7 @@
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page.sync="pagination.currentPage"
-                :page-sizes="[10, 20, 30]"
+                :page-sizes="[15, 20, 30]"
                 :page-size="pagination.perPage"
                 layout="total, prev, pager, next"
                 :total="pagination.total">
@@ -112,7 +112,7 @@ export default {
           },
           pagination: {
               currentPage: 1,
-              perPage: 10,
+              perPage: 15,
               total: 0,
               next: null,
               prev: null,

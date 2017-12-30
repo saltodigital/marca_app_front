@@ -58,7 +58,7 @@ export default new Router({
                 name: 'clients',
                 component: ClientsList
             },{
-                path: 'clients/detail',
+                path: 'clients/detail/:id',
                 name: 'clientsDetail',
                 component: ClientsDetail
             },{

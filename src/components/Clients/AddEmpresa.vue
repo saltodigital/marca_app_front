@@ -94,7 +94,7 @@
         </el-col>
         <el-col :xs="24" :sm="5">
           <el-form-item label="País" class="fluid-width" prop="pais">
-            <el-select v-model="empresa.pais" @change="onChangePais">
+            <el-select filterable v-model="empresa.pais" @change="onChangePais">
               <el-option
                       v-for="item in countries"
                       :key="item.id"
@@ -106,7 +106,7 @@
         </el-col>
         <el-col :xs="24" :sm="5">
           <el-form-item label="Región" class="fluid-width" prop="region">
-            <el-select v-model="empresa.region" :disabled="empresa.pais === '' || !empresa.pais" @change="onChangeRegion">
+            <el-select filterable v-model="empresa.region" :disabled="empresa.pais === '' || !empresa.pais" @change="onChangeRegion">
               <el-option
                       v-for="item in regions"
                       :key="item.id"
@@ -118,7 +118,7 @@
         </el-col>
         <el-col :xs="24" :sm="5">
           <el-form-item label="Ciudad" class="fluid-width" prop="municipio_id">
-            <el-select v-model="empresa.municipio_id" :disabled="empresa.region === '' || !empresa.region">
+            <el-select filterable v-model="empresa.municipio_id" :disabled="empresa.region === '' || !empresa.region">
               <el-option
                       v-for="item in municipalities"
                       :key="item.id"
@@ -455,6 +455,9 @@ export default {
               telefono: [
                   {required: true, message: 'Campo requerido'}
               ],
+              telefonoFijo: [
+                  {required: true, message: 'Campo requerido'}
+              ],
               pais: [
                   {required: true, message: 'Campo requerido'}
               ],
@@ -642,7 +645,8 @@ export default {
                 telefonoFijo: this.selectedClientData.telefonoFijo,
                 municipio_id: this.selectedClientData.municipio.id,
                 region: this.selectedClientData.municipio.region.id,
-                pais: this.selectedClientData.municipio.region.pais.id
+                pais: this.selectedClientData.municipio.region.pais.id,
+                field: 'Empresa'
             };
             this.getRegions();
         },
@@ -655,9 +659,11 @@ export default {
             this.$refs.formEmpresa.validate(valid=>{
                if(valid){
                    this.loading = true;
+                   this.empresa.field = "Empresa";
                    if(this.action === 'add'){
                        http.post('api/empresas/', this.empresa).then(res=>{
                            this.loading = false;
+                           this.$notify.success('Datos guardados.');
                            this.$refs.formEmpresa.resetFields();
                        }).catch(err=>{
                            this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
@@ -666,6 +672,7 @@ export default {
                    }else{
                        http.put('api/empresas/'+ this.empresa.id + '/', this.empresa).then(res=>{
                            this.loading = false;
+                           this.$notify.success('Datos actualizados.');
                            this.$refs.formEmpresa.resetFields();
                        }).catch(err=>{
                            this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
