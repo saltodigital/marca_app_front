@@ -13,12 +13,25 @@
     <el-row class="m-bottom-2">
       <el-col>
         <span>Cliente Empresa</span>
-        <el-input size="medium" placeholder="Buscar...">
-          <el-button slot="append" icon="el-icon-search"></el-button>
-        </el-input>
+        <el-select
+                v-model="selectedClient"
+                filterable
+                remote
+                reserve-keyword
+                placeholder="Buscar"
+                @change="remoteClientChange"
+                :remote-method="remoteClient"
+                :loadingRemote="loadingRemote">
+          <el-option
+                  v-for="item in remoteClients"
+                  :key="item.id"
+                  :label="item.nombre"
+                  :value="item.id">
+          </el-option>
+        </el-select>
       </el-col>
     </el-row>
-    <el-row class="m-bottom-3" :gutter="20">
+    <el-row class="m-bottom-3" :gutter="20" v-loading="loading">
       <el-col :xs="24" :sm="18">
 
         <el-row class="table-row">
@@ -28,15 +41,15 @@
           <el-col :xs="24" :sm="18">
             <el-row class="m-bottom-1">
               <el-col :span="12">
-                <b>Nombre Empresa:</b> FALABELLA SDA
+                <b>Nombre Empresa:</b> {{ item.nombre ? item.nombre : '-' }}
               </el-col>
               <el-col :span="12">
-                <b>Rut:</b> 78.7473.910-5
+                <b>Rut:</b> {{ item.rut ? item.rut : '-' }}
               </el-col>
             </el-row>
             <el-row class="m-bottom-1">
               <el-col>
-                <b>Nombre fantasia:</b> Falabella
+                <b>Nombre fantasia:</b> {{ item.nombre_fantasia ? item.nombre_fantasia : '-' }}
               </el-col>
             </el-row>
           </el-col>
@@ -48,26 +61,26 @@
           <el-col :xs="24" :sm="18">
             <el-row class="m-bottom-1">
               <el-col :span="12">
-                <b>País:</b> Chile
+                <b>País:</b> {{ item.municipio ? item.municipio.region.pais.nombre : '-' }}
               </el-col>
               <el-col :span="12">
-                <b>Ciudad:</b> Santiago
-              </el-col>
-            </el-row>
-            <el-row class="m-bottom-1">
-              <el-col :span="12">
-                <b>Comuna:</b> Macul
-              </el-col>
-              <el-col :span="12">
-                <b>Cód. Postal:</b> 829910
+                <b>Ciudad:</b> {{ item.municipio? item.municipio.region.nombre : '-' }}
               </el-col>
             </el-row>
             <el-row class="m-bottom-1">
               <el-col :span="12">
-                <b>Dirección:</b> Calle 1
+                <b>Comuna:</b> {{ item.municipio ? item.municipio.nombre : '-' }}
               </el-col>
               <el-col :span="12">
-                <b>Número:</b> 3222
+                <b>Cód. Postal:</b> {{ item.codigo_postal ? item.codigo_postal : '-' }}
+              </el-col>
+            </el-row>
+            <el-row class="m-bottom-1">
+              <el-col :span="12">
+                <b>Dirección:</b> {{ item.direccion ? item.direccion : '-' }}
+              </el-col>
+              <el-col :span="12">
+                <b>Número:</b> {{ item.numero ? item.numero : '-' }}
               </el-col>
             </el-row>
           </el-col>
@@ -110,14 +123,6 @@
       </el-col>
     </el-row>
 
-    <el-row class="m-bottom-2">
-      <el-col>
-        <span>Cliente Contacto</span>
-        <el-input size="medium" placeholder="Buscar...">
-          <el-button slot="append" icon="el-icon-search"></el-button>
-        </el-input>
-      </el-col>
-    </el-row>
     <el-row class="m-bottom-2" :gutter="20">
       <el-col :xs="24" :sm="18">
         <el-row class="table-row">
@@ -183,7 +188,7 @@
     </el-row>
     <el-row>
       <el-table
-              :data="tableData"
+              :data="dataTable"
               style="width: 100%">
         <el-table-column
                 prop="nombre"
@@ -221,17 +226,59 @@
 <script>
 export default {
     mounted(){
-
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+        this.id = this.$route.params.id;
+        if(typeof this.id !== "undefined"){
+            this.getData();
+        }
     },
     data () {
-      return{
-          tableData: [
-              {nombre: 'Jornada laboral 1	', cantidad_horas: 8.5, inicial: '09:00 AM', final: '18:30 PM', jornada: 'Lunes; Martes; Miércoles; Jueves.', fecha_inicio: '01/01/16', fecha_final: '02/01/17'},
-              {nombre: 'Jornada laboral 2', cantidad_horas: 7.5, inicial: '09:00 AM', final: '17:30 PM', jornada: 'Viernes.', fecha_inicio: '01/01/16', fecha_final: '02/01/16'},
-              {nombre: 'Colación', cantidad_horas: 1, inicial: '13:00 AM', final: '15:00 PM', jornada: 'Lunes; Martes; Miércoles; Jueves.', fecha_inicio: '01/01/16', fecha_final: '02/01/17'},
-              {nombre: '17 Septiembre	', cantidad_horas: 5, inicial: '09:00 AM', final: '15:00 PM', jornada: 'Jueves', fecha_inicio: '17/09/16', fecha_final: '17/09/16'},
-          ]
+      return {
+          loading: false,
+          items: [],
+          dataTable: [],
+          id: null,
+          item: {},
+
+          remoteClients: [],
+          selectedClient: null,
+          selectedClientData: null,
+          loadingRemote: false,
       }
-  }
+    },
+    methods: {
+        getData(){
+            this.loading = true;
+            http.get('api/empresas/' + this.id + '/').then(res=>{
+                this.item = res.data.data;
+                this.loading = false;
+            }).catch(err=>{
+               this.loading = false;
+            });
+        },
+        remoteClientChange(val){
+            this.item = this.remoteClients.find((item)=>{
+                return item.id === val;
+            });
+        },
+        remoteClient(query) {
+            if (query !== '' && query.length >= 2) {
+                this.loadingRemote = true;
+                http.get('api/empresas/', {
+                    params: {
+                        dato: query,
+                        sin_paginacion: true
+                    }
+                }).then(res=>{
+                    this.remoteClients = res.data.data;
+                }).catch(err=>{
+                    this.remoteClients = [];
+                });
+            } else {
+                this.remoteClients = [];
+            }
+        },
+    }
 }
 </script>
