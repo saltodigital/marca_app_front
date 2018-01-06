@@ -168,11 +168,6 @@
         <el-checkbox v-model="add_contact">Asignar contacto</el-checkbox>
         <el-checkbox v-model="add_schedule">Asignar horario</el-checkbox>
       </el-col>
-      <el-col :xs="24" :sm="12">
-        <el-button type="primary" class="float-right" @click="saveEmpresa" :loading="loading">
-          Guardar
-        </el-button>
-      </el-col>
     </el-row>
 
     <!-- Contact -->
@@ -183,120 +178,23 @@
       <el-col>
         <span>Búsqueda de Cliente Contacto</span>
         <el-select
-                v-model="selectedClientContact"
+                v-model="selectedContactContact"
                 filterable
                 clearable
                 remote
                 reserve-keyword
                 placeholder="Buscar"
-                :remote-method="remoteMethod"
+                @change="remoteContactChange"
+                :remote-method="remoteContact"
                 :loadingRemote="loadingRemote">
           <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+                  v-for="item in remoteContacts"
+                  :key="item.id"
+                  :label="item.nombre + ' ' + item.primerApellido"
+                  :value="item.id">
           </el-option>
         </el-select>
-        <el-button :disabled="!selectedClientContact" @click="handleEdit">
-          Asignar
-        </el-button>
       </el-col>
-    </el-row>
-    <el-row :gutter="20" v-if="add_contact">
-      <el-form label-position="top" :model="client_contact">
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Nombre" class="fluid-width" prop="nombre">
-            <el-input v-model="client_contact.nombre"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Apellido Materno" class="fluid-width" prop="apellido_materno">
-            <el-input v-model="client_contact.apellido_materno"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Apellido Paterno" class="fluid-width" prop="apellido_paterno">
-            <el-input v-model="client_contact.apellido_paterno"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="RUT" class="fluid-width" prop="rut">
-            <el-input v-model="client_contact.rut"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="4">
-          <el-form-item label="Fecha de nacimiento" class="fluid-width" prop="fecha_nacimiento">
-            <el-date-picker
-                    v-model="client_contact.fecha_nacimiento"
-                    type="date"
-                    placeholder="Seleccione">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Género" class="fluid-width" prop="genero">
-            <el-select v-model="client_contact.genero">
-              <el-option
-                      v-for="item in [{label: 'Masculino', value: 'masculino'},{label: 'Femenino', value: 'femenino'}]"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Nacionalidad" class="fluid-width" prop="nacionalidad">
-            <el-input v-model="client_contact.nacionalidad"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Estado Civil" class="fluid-width" prop="estado_civil">
-            <el-select v-model="client_contact.estado_civil">
-              <el-option
-                      v-for="item in [{label: 'Soltero', value: 'soltero'},{label: 'Casado', value: 'casado'}]"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Correo Electrónico" class="fluid-width" prop="correo_electronico">
-            <el-input v-model="client_contact.correo_electronico">contact</el-input>
-          </el-form-item>
-        </el-col>
-
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Teléfono Fijo" class="fluid-width" prop="telefono_fijo">
-            <el-input v-model="client_contact.telefono_fijo"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Teléfono Móvil 1" class="fluid-width" prop="telefono_movil_1">
-            <el-input v-model="client_contact.telefono_movil_1"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Teléfono Móvil 2" class="fluid-width" prop="telefono_movil_2">
-            <el-input v-model="client_contact.telefono_movil_2"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Cargo Informado" class="fluid-width" prop="cargo_informado">
-            <el-select v-model="client_contact.cargo_informado">
-              <el-option
-                      v-for="item in []"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-form>
     </el-row>
     <!-- End Contact -->
 
@@ -401,6 +299,14 @@
       </el-table>
     </el-row>
     <!-- Schedule -->
+
+    <el-row class="m-bottom-2">
+      <el-col>
+        <el-button type="primary" class="float-right" @click="saveEmpresa" :loading="loading">
+          Guardar
+        </el-button>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -412,8 +318,11 @@ export default {
           add_contact: false,
           add_schedule: false,
           remoteClients: [],
+          remoteContacts: [],
           selectedClient: null,
+          selectedContact: null,
           selectedClientData: null,
+          selectedContactData: null,
 
           empresa: {
               id: null,
@@ -495,6 +404,7 @@ export default {
           },
           options: [],
           selectedClientContact: null,
+          selectedContactContact: null,
           list: [],
           loadingRemote: false,
           clients: [
@@ -512,16 +422,6 @@ export default {
               "Zoey Gamble"
           ],
           action: 'add',
-          status: [{
-              value: 'Option1',
-              label: 'Option1'
-          }, {
-              value: 'Option2',
-              label: 'Option2'
-          }, {
-              value: 'Option3',
-              label: 'Option3'
-          }],
           countries: [],
           regions: [],
           municipalities: [],
@@ -561,7 +461,6 @@ export default {
               {nombre: 'Colación', cantidad_horas: 1, inicial: '13:00 AM', final: '15:00 PM', jornada: 'Lunes; Martes; Miércoles; Jueves.', fecha_inicio: '01/01/16', fecha_final: '02/01/17'},
               {nombre: '17 Septiembre	', cantidad_horas: 5, inicial: '09:00 AM', final: '15:00 PM', jornada: 'Jueves', fecha_inicio: '17/09/16', fecha_final: '17/09/16'},
           ],
-          imageUrl: null
       }
     },
     mounted(){
@@ -588,6 +487,23 @@ export default {
                 });
             } else {
                 this.remoteClients = [];
+            }
+        },
+        remoteContact(query) {
+            if (query !== '' && query.length >= 2) {
+                this.loadingRemote = true;
+                http.get('api/personas/', {
+                    params: {
+                        dato: query,
+                        sin_paginacion: true
+                    }
+                }).then(res=>{
+                    this.remoteContacts = res.data.data;
+                }).catch(err=>{
+                    this.remoteContacts = [];
+                });
+            } else {
+                this.remoteContacts = [];
             }
         },
         getCountries(){
@@ -655,20 +571,50 @@ export default {
                 return item.id === val;
             });
         },
+        remoteContactChange(val){
+            this.selectedContactData = this.remoteContacts.find((item)=>{
+                return item.id === val;
+            });
+        },
+        handleAssign(){
+
+        },
         saveEmpresa(){
             this.$refs.formEmpresa.validate(valid=>{
                if(valid){
                    this.loading = true;
                    this.empresa.field = "Empresa";
                    if(this.action === 'add'){
-                       http.post('api/empresas/', this.empresa).then(res=>{
-                           this.loading = false;
-                           this.$notify.success('Datos guardados.');
-                           this.$refs.formEmpresa.resetFields();
-                       }).catch(err=>{
-                           this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
-                           this.loading = false;
-                       });
+                       if(this.selectedContactContact){
+                           http.post('api/empresas/', this.empresa).then(res=>{
+                               let empresa_id = res.data.data.id;
+                               this.$refs.formEmpresa.resetFields();
+                               http.post('api/empresaContactos/', {
+                                   empresa_id: empresa_id,
+                                   persona_id: this.selectedContactContact,
+                                   cargo: 'Contacto'
+                               }).then(res=>{
+                                   this.loading = false;
+                                   this.$notify.success('Datos almacenados');
+                                   this.selectedContactContact = null;
+                               }).catch(err=>{
+                                   this.$notify.error('Error al guardar contacto.');
+                                   this.loading = false;
+                               });
+                           }).catch(err=>{
+                               this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
+                               this.loading = false;
+                           });
+                       }else{
+                           http.post('api/empresas/', this.empresa).then(res=>{
+                               this.loading = false;
+                               this.$notify.success('Datos guardados.');
+                               this.$refs.formEmpresa.resetFields();
+                           }).catch(err=>{
+                               this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
+                               this.loading = false;
+                           });
+                       }
                    }else{
                        http.put('api/empresas/'+ this.empresa.id + '/', this.empresa).then(res=>{
                            this.loading = false;
