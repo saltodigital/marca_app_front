@@ -74,7 +74,7 @@ export default new Router({
                 name: 'projects',
                 component: ProjectsList
             },{
-                path: 'projects/detail',
+                path: 'projects/detail/:id',
                 name: 'projectsDetail',
                 component: ProjectsDetail
             },{

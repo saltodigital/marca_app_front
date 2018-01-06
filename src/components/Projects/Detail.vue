@@ -13,14 +13,69 @@
     <el-row class="m-bottom-2">
       <el-col>
         <span>Cliente Empresa</span>
-        <el-input size="medium" placeholder="Buscar...">
-          <el-button slot="append" icon="el-icon-search"></el-button>
-        </el-input>
+        <el-select
+                v-model="selectedClient"
+                filterable
+                remote
+                reserve-keyword
+                placeholder="Buscar"
+                @change="remoteClientChange"
+                :remote-method="remoteClient"
+                :loadingRemote="loadingRemote">
+          <el-option
+                  v-for="item in remoteClients"
+                  :key="item.id"
+                  :label="item.nombre"
+                  :value="item.id">
+          </el-option>
+        </el-select>
       </el-col>
     </el-row>
-    <el-row class="m-bottom-3" :gutter="20">
+    <el-row class="m-bottom-3" :gutter="20" v-loading="loading">
       <el-col :xs="24" :sm="18">
 
+        <el-row class="table-row">
+          <el-col :xs="24" :sm="6" class="flex-center">
+            <h4>Proyecto</h4>
+          </el-col>
+          <el-col :xs="24" :sm="18">
+            <el-row class="m-bottom-1">
+              <el-col :span="12" class="m-bottom-1">
+                <b>Nombre:</b> {{ item.nombre ? item.nombre : '-' }}
+              </el-col>
+              <el-col :span="12" class="m-bottom-1">
+                <b>Descripción:</b> {{ item.descripcion ? item.descripcion : '-' }}
+              </el-col>
+              <el-col :span="12" class="m-bottom-1">
+                <b>Desde:</b> {{ item.fechaInicio ? item.fechaInicio : '-' }}
+              </el-col>
+              <el-col :span="12" class="m-bottom-1">
+                <b>Hasta:</b> {{ item.fechaFin ? item.fechaFin : '-' }}
+              </el-col>
+            </el-row>
+          </el-col>
+
+        </el-row>
+        <el-row class="table-row">
+          <el-col :xs="24" :sm="6" class="flex-center">
+            <h4>Dirección</h4>
+          </el-col>
+          <el-col :xs="24" :sm="18">
+            <el-row class="m-bottom-1">
+              <el-col :span="12">
+                <b>País:</b> {{ item.municipio ? item.municipio.region.pais.nombre : '-' }}
+              </el-col>
+              <el-col :span="12">
+                <b>Ciudad:</b> {{ item.municipio? item.municipio.region.nombre : '-' }}
+              </el-col>
+            </el-row>
+            <el-row class="m-bottom-1">
+              <el-col :span="12">
+                <b>Comuna:</b> {{ item.municipio ? item.municipio.nombre : '-' }}
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
         <el-row class="table-row">
           <el-col :xs="24" :sm="6" class="flex-center">
             <h4>Cliente</h4>
@@ -28,18 +83,46 @@
           <el-col :xs="24" :sm="18">
             <el-row class="m-bottom-1">
               <el-col :span="12">
-                <b>Nombre Empresa:</b> FALABELLA SDA
+                <b>Nombre Empresa:</b> {{ item.empresa ? item.empresa.nombre : '-' }}
               </el-col>
               <el-col :span="12">
-                <b>Rut:</b> 78.7473.910-5
+                <b>Rut:</b> {{ item.empresa ? item.empresa.rut : '-' }}
+              </el-col>
+            </el-row>
+            <el-row class="m-bottom-1">
+              <el-col>
+                <b>Nombre fantasia:</b> {{ item.empresa ? item.empresa.nombre_fantasia : '-' }}
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+        <el-row class="table-row">
+          <el-col :xs="24" :sm="6" class="flex-center">
+            <h4>Dirección</h4>
+          </el-col>
+          <el-col :xs="24" :sm="18">
+            <el-row class="m-bottom-1">
+              <el-col :span="12">
+                <b>País:</b> {{ item.empresa.municipio ? item.empresa.municipio.region.pais.nombre : '-' }}
+              </el-col>
+              <el-col :span="12">
+                <b>Ciudad:</b> {{ item.empresa.municipio? item.empresa.municipio.region.nombre : '-' }}
               </el-col>
             </el-row>
             <el-row class="m-bottom-1">
               <el-col :span="12">
-                <b>País:</b> Chile
+                <b>Comuna:</b> {{ item.empresa.municipio ? item.empresa.municipio.nombre : '-' }}
               </el-col>
               <el-col :span="12">
-                <b>Ciudad:</b> Santiago
+                <b>Cód. Postal:</b> {{ item.codigo_postal ? item.codigo_postal : '-' }}
+              </el-col>
+            </el-row>
+            <el-row class="m-bottom-1">
+              <el-col :span="12">
+                <b>Dirección:</b> {{ item.direccion ? item.direccion : '-' }}
+              </el-col>
+              <el-col :span="12">
+                <b>Número:</b> {{ item.numero ? item.numero : '-' }}
               </el-col>
             </el-row>
           </el-col>
@@ -82,14 +165,6 @@
       </el-col>
     </el-row>
 
-    <el-row class="m-bottom-2">
-      <el-col>
-        <span>Cliente Contacto</span>
-        <el-input size="medium" placeholder="Buscar...">
-          <el-button slot="append" icon="el-icon-search"></el-button>
-        </el-input>
-      </el-col>
-    </el-row>
     <el-row class="m-bottom-2" :gutter="20">
       <el-col :xs="24" :sm="18">
         <el-row class="table-row">
@@ -121,6 +196,27 @@
                 <b>Teléfono Móvil 2:</b> +569 90001010
               </el-col>
             </el-row>
+            <el-row class="m-bottom-1">
+              <el-col :span="12">
+                <b>Fecha Nacimiento :</b> 6/8/1977
+              </el-col>
+              <el-col :span="12">
+                <b>Nacionalidad:</b> Chilena
+              </el-col>
+            </el-row>
+            <el-row class="m-bottom-1">
+              <el-col :span="12">
+                <b>Género:</b> Masculino
+              </el-col>
+              <el-col :span="12">
+                <b>Estado Civil:</b> Soltero
+              </el-col>
+            </el-row>
+            <el-row class="m-bottom-1">
+              <el-col>
+                <b>Rut:</b> 12345678-9
+              </el-col>
+            </el-row>
           </el-col>
         </el-row>
       </el-col>
@@ -129,69 +225,12 @@
       </el-col>
     </el-row>
 
-    <el-row class="m-bottom-2">
-      <el-col>
-        <span>Proyectos</span>
-        <el-input size="medium" placeholder="Buscar...">
-          <el-button slot="append" icon="el-icon-search"></el-button>
-        </el-input>
-      </el-col>
-    </el-row>
-    <el-row class="m-bottom-2" :gutter="20">
-      <el-col :xs="24" :sm="18">
-        <el-row class="table-row">
-          <el-col :xs="24" :sm="6" class="flex-center">
-            <h4>Proyecto</h4>
-          </el-col>
-          <el-col :xs="24" :sm="18">
-            <el-row class="m-bottom-1">
-              <el-col :span="12">
-                <b>Nombre Proyecto:</b> Central Cajas
-              </el-col>
-            </el-row>
-            <el-row class="m-bottom-1">
-              <el-col :span="12">
-                <b>Nombre Contacto:</b> Carlos Jhein
-              </el-col>
-              <el-col :span="12">
-                <b>Correo Electrónico:</b> cparra@corre.cl
-              </el-col>
-            </el-row>
-            <el-row class="m-bottom-1">
-              <el-col :span="12">
-                <b>Teléfono Móvil:</b> +569 90001010
-              </el-col>
-              <el-col :span="12">
-                <b>Teléfono Fijo :</b> +569 90001010 + anexo
-              </el-col>
-            </el-row>
-            <el-row class="m-bottom-1">
-              <el-col :span="12">
-                <b>Fecha Inicio:</b> 1/1/2016
-              </el-col>
-              <el-col :span="12">
-                <b>Fecha Fin:</b> 1/1/2017
-              </el-col>
-            </el-row>
-            <el-row class="m-bottom-2">
-              <el-col :span="12">
-                <b>Estado:</b> Activo
-              </el-col>
-              <el-col :span="12">
-                <b>Fecha Estado:</b> 1/1/2016
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-      </el-col>
-    </el-row>
-
     <el-row class="m-bottom-1">
       <p>Vista Horario - Jornada Diaria y especial de asignaciones del cliente.</p>
     </el-row>
     <el-row>
       <el-table
-              :data="tableData"
+              :data="dataTable"
               style="width: 100%">
         <el-table-column
                 prop="nombre"
@@ -227,19 +266,61 @@
 </template>
 
 <script>
-export default {
-    mounted(){
+    export default {
+        mounted(){
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+            this.id = this.$route.params.id;
+            if(typeof this.id !== "undefined"){
+                this.getData();
+            }
+        },
+        data () {
+            return {
+                loading: false,
+                items: [],
+                dataTable: [],
+                id: null,
+                item: {},
 
-    },
-    data () {
-      return{
-          tableData: [
-              {nombre: 'Jornada laboral 1	', cantidad_horas: 8.5, inicial: '09:00 AM', final: '18:30 PM', jornada: 'Lunes; Martes; Miércoles; Jueves.', fecha_inicio: '01/01/16', fecha_final: '02/01/17'},
-              {nombre: 'Jornada laboral 2', cantidad_horas: 7.5, inicial: '09:00 AM', final: '17:30 PM', jornada: 'Viernes.', fecha_inicio: '01/01/16', fecha_final: '02/01/16'},
-              {nombre: 'Colación', cantidad_horas: 1, inicial: '13:00 AM', final: '15:00 PM', jornada: 'Lunes; Martes; Miércoles; Jueves.', fecha_inicio: '01/01/16', fecha_final: '02/01/17'},
-              {nombre: '17 Septiembre	', cantidad_horas: 5, inicial: '09:00 AM', final: '15:00 PM', jornada: 'Jueves', fecha_inicio: '17/09/16', fecha_final: '17/09/16'},
-          ]
-      }
-  }
-}
+                remoteClients: [],
+                selectedClient: null,
+                selectedClientData: null,
+                loadingRemote: false,
+            }
+        },
+        methods: {
+            getData(){
+                this.loading = true;
+                http.get('api/proyectos/' + this.id + '/').then(res=>{
+                    this.item = res.data.data;
+                    this.loading = false;
+                }).catch(err=>{
+                    this.loading = false;
+                });
+            },
+            remoteClientChange(val){
+                this.item = this.remoteClients.find((item)=>{
+                    return item.id === val;
+                });
+            },
+            remoteClient(query) {
+                if (query !== '' && query.length >= 2) {
+                    this.loadingRemote = true;
+                    http.get('api/proyectos/', {
+                        params: {
+                            dato: query,
+                            sin_paginacion: true
+                        }
+                    }).then(res=>{
+                        this.remoteClients = res.data.data;
+                    }).catch(err=>{
+                        this.remoteClients = [];
+                    });
+                } else {
+                    this.remoteClients = [];
+                }
+            },
+        }
+    }
 </script>
