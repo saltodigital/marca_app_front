@@ -23,15 +23,15 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 # Subir a Heroku
 
 Para actualizar o subir el proyecto a Heroku, debes eliminar todo
-lo que está en la carpeta **build** a excepción de la carpeta **.git**,
+lo que está en la carpeta **dist** a excepción de la carpeta **.git**,
 ejecuta el comando **npm run build**
 
- Esto creará una serie de ficheros en la carpeta **build**, dentro de la
+ Esto creará una serie de ficheros en la carpeta **dist**, dentro de la
  misma carpeta copia **index.html** como **index.php**
 
  ``` bash
- #Ingresa a la carpeta **build**:
- cd build
+ #Ingresa a la carpeta **dist**:
+ cd dist
 
  #Agrega los cambios:
  git add .
