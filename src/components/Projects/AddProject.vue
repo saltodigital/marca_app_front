@@ -12,24 +12,25 @@
     </el-row>
     <el-row class="m-bottom-2">
       <el-col>
-        <span>Búsqueda de cliente</span>
+        <span>Búsqueda de proyectos</span>
         <el-select
-                v-model="selectedClient"
+                v-model="selectedProject"
                 filterable
                 clearable
                 remote
                 reserve-keyword
-                placeholder="Buscar cliente empresa"
-                :remote-method="remoteMethod"
+                placeholder="Buscar proyecto"
+                @change="remoteProjectChange"
+                :remote-method="remoteProject"
                 :loadingRemote="loadingRemote">
           <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+                  v-for="item in listProjets"
+                  :key="item.id"
+                  :label="item.nombre"
+                  :value="item.id">
           </el-option>
         </el-select>
-        <el-button :disabled="!selectedClient" @click="handleEdit">
+        <el-button :disabled="!selectedProject" @click="handleEdit">
           Editar
         </el-button>
       </el-col>
@@ -38,425 +39,182 @@
       <h3>Detalle - Cliente Empresa</h3>
     </el-row>
     <el-row :gutter="20">
-      <el-form label-position="top" :model="client_business">
-        <el-col :xs="24" :sm="5">
-          <el-upload
-                  class="avatar-uploader"
-                  action="/"
-                  :show-file-list="false"
-                  :on-change="beforeImageUpload"
-                  :auto-upload="false"
-                  :on-success="handleImageSuccess">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-col>
-        <el-col :xs="24" :sm="3">
-          <el-form-item label="ID Proyecto" class="fluid-width">
-            <el-input></el-input>
+      <el-form label-position="top" :model="proyecto" :rules="proyectoRules" ref="formProyecto">
+        <el-col :xs="24" :sm="6">
+          <el-form-item label="Nombre" class="fluid-width" prop="nombre">
+            <el-input v-model="proyecto.nombre"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="7">
-          <el-form-item label="Nombre proyecto" class="fluid-width" prop="nombre_empresa">
-            <el-input v-model="client_business.nombre_empresa"></el-input>
+        <el-col :xs="24" :sm="6">
+          <el-form-item label="Valor adjudicado" class="fluid-width" prop="valorAdjudicado">
+            <el-input-number :controls="false" v-model="proyecto.valorAdjudicado"></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="4">
-          <el-form-item label="Fecha Inicio" class="fluid-width" prop="fecha_registro">
+        <el-col :xs="24" :sm="6">
+          <el-form-item label="Fecha Inicio" class="fluid-width" prop="fechaInicio">
             <el-date-picker
-                    v-model="client_business.fecha_inicio"
+                    v-model="proyecto.fechaInicio"
                     type="date"
+                    format="dd-MM-yyyy"
                     placeholder="Seleccione">
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="4">
-          <el-form-item label="Fecha Fin" class="fluid-width" prop="fecha_registro">
+        <el-col :xs="24" :sm="6">
+          <el-form-item label="Fecha Fin" class="fluid-width" prop="fechaFin">
             <el-date-picker
-                    v-model="client_business.fecha_fin"
+                    v-model="proyecto.fechaFin"
                     type="date"
+                    format="dd-MM-yyyy"
                     placeholder="Seleccione">
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="18">
-          <el-form-item label="Breve Descripción" class="fluid-width" prop="nombre_fantasia">
-            <el-input type="textarea"></el-input>
+        <el-col :xs="24" :sm="9">
+          <el-form-item label="Breve Descripción" class="fluid-width" prop="descripcion">
+            <el-input type="textarea" v-model="proyecto.descripcion" :rows="6"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="5">
           <el-form-item label="País" class="fluid-width" prop="pais">
-            <el-select v-model="client_business.pais">
+            <el-select v-model="proyecto.pais" filterable @change="onChangePais">
               <el-option
                       v-for="item in countries"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
+                      :key="item.id"
+                      :label="item.nombre"
+                      :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="5">
           <el-form-item label="Región" class="fluid-width" prop="region">
-            <el-select v-model="client_business.region">
+            <el-select v-model="proyecto.region" filterable :disabled="proyecto.pais === '' || !proyecto.pais" @change="onChangeRegion">
               <el-option
                       v-for="item in regions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
+                      :key="item.id"
+                      :label="item.nombre"
+                      :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="5">
-          <el-form-item label="Ciudad" class="fluid-width" prop="ciudad">
-            <el-select v-model="client_business.ciudad">
+          <el-form-item label="Ciudad" class="fluid-width" prop="municipio_id">
+            <el-select v-model="proyecto.municipio_id" :disabled="proyecto.region === '' || !proyecto.region">
               <el-option
-                      v-for="item in cities"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
+                      v-for="item in municipalities"
+                      :key="item.id"
+                      :label="item.nombre"
+                      :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="5">
-          <el-form-item label="Nombre Calle" class="fluid-width" prop="calle">
-            <el-input placeholder="Buscar calle..." v-model="client_business.calle">
-              <el-button slot="append" icon="el-icon-location"></el-button>
-            </el-input>
+          <el-form-item label="Estado proyecto" class="fluid-width" prop="estado_id">
+            <el-select v-model="proyecto.estado_id">
+              <el-option
+                      v-for="item in estados"
+                      :key="item.id"
+                      :label="item.nombre"
+                      :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="4">
-          <el-form-item label="Número" class="fluid-width" prop="numero">
-            <el-input-number :controls="false" v-model="client_business.numero"></el-input-number>
+        <el-col :xs="24" :sm="5">
+          <el-form-item label="Tipo proyecto" class="fluid-width" prop="tipo_id">
+            <el-select v-model="proyecto.tipo_id">
+              <el-option
+                      v-for="item in tipos"
+                      :key="item.id"
+                      :label="item.nombre"
+                      :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="5">
+          <el-form-item label="Empresa" class="fluid-width" prop="empresa_id">
+            <el-select
+                    v-model="proyecto.empresa_id"
+                    filterable
+                    clearable
+                    remote
+                    reserve-keyword
+                    placeholder="Buscar empresa"
+                    :remote-method="remoteEmpresa"
+                    :loadingRemote="loadingRemote">
+              <el-option
+                      v-for="item in listEmpresas"
+                      :key="item.id"
+                      :label="item.nombre"
+                      :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
-          <el-form-item label="Latitude" class="fluid-width" prop="latitud">
-            <el-input v-model="client_business.latitud"></el-input>
+          <el-form-item label="Latitud" class="fluid-width" prop="latitud">
+            <el-input :disabled="true" v-model="proyecto.latitud">
+            </el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
           <el-form-item label="Longitud" class="fluid-width" prop="longitud">
-            <el-input v-model="client_business.longitud"></el-input>
+            <el-input :disabled="true" v-model="proyecto.longitud">
+            </el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="6">
-          <el-form-item label="Código Postal" class="fluid-width" prop="codigo_postal">
-            <el-input v-model="client_business.codigo_postal"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="IP" class="fluid-width" prop="ip">
-            <el-input v-model="client_business.ip"></el-input>
-          </el-form-item>
+          <el-button class="form-item-space" icon="el-icon-location"  @click="mapVisible = true">Seleccionar coordenadas</el-button>
+          <el-dialog title="Buscar coordenadas" :visible.sync="mapVisible" @open="handleOpenMap">
+            <input ref="pacInput" class="pac-input controls" type="text" placeholder="Buscar ubicación">
+            <div class="map" ref="map"></div>
+            <br>
+            <el-button size="mini" @click="mapVisible = false">Aceptar</el-button>
+          </el-dialog>
         </el-col>
       </el-form>
     </el-row>
-    <el-row>
-      <h3>Asignar - Cliente Empresa</h3>
-    </el-row>
+
     <el-row class="m-bottom-2">
-      <el-col>
-        <span>Búsqueda de Cliente Empresa</span>
-        <el-select
-                v-model="selectedClientContact"
-                filterable
-                clearable
-                remote
-                reserve-keyword
-                placeholder="Buscar cliente contacto"
-                :remote-method="remoteMethod"
-                :loadingRemote="loadingRemote">
-          <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-          </el-option>
-        </el-select>
-        <el-button :disabled="!selectedClientContact" @click="handleEdit">
-          Asignar
-        </el-button>
+      <el-col :xs="24" :sm="12">
+        <el-checkbox v-model="add_contact">Asignar contacto</el-checkbox>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
-      <el-form label-position="top" :model="client_contact">
-        <el-col :xs="24" :sm="8">
-          <el-form-item label="Nombre Empresa" class="fluid-width" prop="nombre">
-            <el-input v-model="client_contact.nombre"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="8">
-          <el-form-item label="Nombre Fantasia" class="fluid-width" prop="apellido_materno">
-            <el-input v-model="client_contact.apellido_materno"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="8">
-          <el-form-item label="Rut" class="fluid-width" prop="apellido_paterno">
-            <el-input v-model="client_contact.apellido_paterno"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="8">
-          <el-form-item label="Fecha de registro" class="fluid-width" prop="fecha_nacimiento">
-            <el-date-picker
-                    v-model="client_contact.fecha_registro"
-                    type="date"
-                    placeholder="Seleccione">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="8">
-          <el-form-item label="Estado del Cliente" class="fluid-width" prop="genero">
-            <el-select v-model="client_contact.genero">
-              <el-option
-                      v-for="item in [{label: 'Activo', value: 'masculino'},{label: 'Inactivo', value: 'femenino'}]"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="8">
-          <el-form-item label="Fecha Estado del Proyecto" class="fluid-width" prop="fecha_nacimiento">
-            <el-date-picker
-                    v-model="client_contact.fecha_proyecto"
-                    type="date"
-                    placeholder="Seleccione">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-      </el-form>
-    </el-row>
 
-
-    <el-row>
-      <h3>Asignar - Cliente Contacto</h3>
+    <!-- Contact -->
+    <el-row v-if="add_contact">
+      <h3>Asignar - Proyecto Contacto</h3>
     </el-row>
-    <el-row class="m-bottom-2">
+    <el-row class="m-bottom-2" v-if="add_contact">
       <el-col>
-        <span>Búsqueda de Cliente Contacto</span>
+        <span>Búsqueda de Proyecto Contacto</span>
         <el-select
-                v-model="selectedClientContact"
+                v-model="selectedContactContact"
                 filterable
                 clearable
                 remote
                 reserve-keyword
                 placeholder="Buscar"
-                :remote-method="remoteMethod"
+                @change="remoteContactChange"
+                :remote-method="remoteContact"
                 :loadingRemote="loadingRemote">
           <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+                  v-for="item in remoteContacts"
+                  :key="item.id"
+                  :label="item.nombre + ' ' + item.primerApellido"
+                  :value="item.id">
           </el-option>
         </el-select>
-        <el-button :disabled="!selectedClientContact" @click="handleEdit">
-          Asignar
-        </el-button>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
-      <el-form label-position="top" :model="client_contact">
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Nombre" class="fluid-width" prop="nombre">
-            <el-input v-model="client_contact.nombre"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Apellido Materno" class="fluid-width" prop="apellido_materno">
-            <el-input v-model="client_contact.apellido_materno"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Apellido Paterno" class="fluid-width" prop="apellido_paterno">
-            <el-input v-model="client_contact.apellido_paterno"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="RUT" class="fluid-width" prop="rut">
-            <el-input v-model="client_contact.rut"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="4">
-          <el-form-item label="Fecha de nacimiento" class="fluid-width" prop="fecha_nacimiento">
-            <el-date-picker
-                    v-model="client_contact.fecha_nacimiento"
-                    type="date"
-                    placeholder="Seleccione">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Género" class="fluid-width" prop="genero">
-            <el-select v-model="client_contact.genero">
-              <el-option
-                      v-for="item in [{label: 'Masculino', value: 'masculino'},{label: 'Femenino', value: 'femenino'}]"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Nacionalidad" class="fluid-width" prop="nacionalidad">
-            <el-input v-model="client_contact.nacionalidad"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Estado Civil" class="fluid-width" prop="estado_civil">
-            <el-select v-model="client_contact.estado_civil">
-              <el-option
-                      v-for="item in [{label: 'Soltero', value: 'soltero'},{label: 'Casado', value: 'casado'}]"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Correo Electrónico" class="fluid-width" prop="correo_electronico">
-            <el-input v-model="client_contact.correo_electronico">contact</el-input>
-          </el-form-item>
-        </el-col>
+    <!-- End Contact -->
 
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Teléfono Fijo" class="fluid-width" prop="telefono_fijo">
-            <el-input v-model="client_contact.telefono_fijo"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Teléfono Móvil 1" class="fluid-width" prop="telefono_movil_1">
-            <el-input v-model="client_contact.telefono_movil_1"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Teléfono Móvil 2" class="fluid-width" prop="telefono_movil_2">
-            <el-input v-model="client_contact.telefono_movil_2"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Cargo Informado" class="fluid-width" prop="cargo_informado">
-            <el-select v-model="client_contact.cargo_informado">
-              <el-option
-                      v-for="item in []"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-form>
-    </el-row>
     <el-row>
-      <h3>Horario del Cliente</h3>
-    </el-row>
-    <el-row :gutter="20">
-      <el-form label-position="top">
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Nombre Condición">
-            <el-input></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="4">
-          <el-form-item label="Fecha Inicio" class="fluid-width">
-            <el-date-picker
-                    v-model="client_horario.fecha_inicio"
-                    type="date"
-                    placeholder="Seleccione">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="4">
-          <el-form-item label="Fecha Termino" class="fluid-width">
-            <el-date-picker
-                    v-model="client_horario.fecha_termina"
-                    type="date"
-                    placeholder="Seleccione">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="3">
-          <el-form-item label="Hora Inicio" class="fluid-width">
-            <el-time-select
-                    v-model="client_horario.hora_inicio"
-                    placeholder="Seleccione">
-            </el-time-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="3">
-          <el-form-item label="Hora Fin" class="fluid-width">
-            <el-time-select
-                    v-model="client_horario.hora_fin"
-                    placeholder="Seleccione">
-            </el-time-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Días">
-            <el-select
-                    v-model="client_horario.dias"
-                    multiple
-                    collapse-tags
-                    placeholder="Seleccione">
-              <el-option
-                      v-for="item in dias"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-form>
-    </el-row>
-
-
-    <el-row class="m-bottom-1">
-      <p>Vista Horario - Jornada Diaria y especial de asignaciones del cliente.</p>
-    </el-row>
-    <el-row class="m-bottom-2">
-      <el-table
-              :data="tableData"
-              style="width: 100%">
-        <el-table-column
-                prop="nombre"
-                label="Nombre">
-        </el-table-column>
-        <el-table-column
-                prop="cantidad_horas"
-                label="Cantidad de Horas">
-        </el-table-column>
-        <el-table-column
-                prop="inicial"
-                label="Inicial">
-        </el-table-column>
-        <el-table-column
-                prop="final"
-                label="Final">
-        </el-table-column>
-        <el-table-column
-                prop="jornada"
-                label="Jornada">
-        </el-table-column>
-        <el-table-column
-                prop="fecha_inicio"
-                label="Fecha inicio">
-        </el-table-column>
-        <el-table-column
-                prop="fecha_final"
-                label="Fecha Final">
-        </el-table-column>
-      </el-table>
-    </el-row>
-    <el-row>
-      <el-button type="primary" class="float-right">
+      <el-button type="primary" class="float-right" @click="saveProyecto" :loading="loading">
         Guardar
       </el-button>
     </el-row>
@@ -464,161 +222,397 @@
 </template>
 
 <script>
+import moment from 'moment';
 export default {
     mounted(){
-        this.list = this.clients.map(item => {
-            return { value: item, label: item };
-        });
-        /*
-        http.get('api/pais/').then(res=>{
-            console.log(res);
-        });*/
+        this.getCountries();
+        this.getEstados();
+        this.getTipos();
+    },
+    watch: {
+        regionLoaded: function (val) {
+            this.getMunicipalities();
+        }
     },
     data () {
       return{
-          client_business: {
-              nombre_empresa: '',
-              nombre_fantasia: '',
-              rut: '',
-              fecha_registro: '',
-              estado_cliente: '',
-              fecha_estado: '',
-              pais: '',
-              region: '',
-              ciudad: '',
-              calle: '',
-              numero: '',
-              latitud: '',
-              longitud: '',
-              codigo_postal: '',
-              ip: '',
-              fecha_inicio: '',
-              fecha_fin: ''
+          add_contact: false,
+          selectedContactContact: null,
+          remoteContacts: [],
+          selectedContactData: null,
+
+          proyecto: {
+              id: null,
+              nombre: "",
+              descripcion: "",
+              valorAdjudicado: "",
+              latitud: "",
+              longitud: "",
+              fechaInicio: "",
+              fechaFin: "",
+              municipio_id: null,
+              empresa_id: null,
+              estado_id: null,
+              tipo_id: null,
+
+              pais: null,
+              region: null
           },
-          client_contact: {
-              nombre: '',
-              apellido_materno: '',
-              apellido_paterno: '',
-              rut: '',
-              fecha_nacimiento: '',
-              genero: '',
-              nacionalidad: '',
-              estado_civil: '',
-              correo_electronico: '',
-              telefono_fijo: '',
-              telefono_movil_1: '',
-              telefono_movil_2: '',
-              cargo_informado: '',
-              fecha_registro: '',
-              fecha_proyecto: ''
+          proyectoRules :{
+              nombre: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              descripcion: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              valorAdjudicado: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              latitud: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              longitud: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              fechaInicio: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              fechaFin: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              municipio_id: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              empresa_id: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              estado_id: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              tipo_id: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              pais: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              region: [
+                  {required: true, message: 'Campo requerido'}
+              ],
           },
-          client_horario: {
-              nombre: '',
-              fecha_inicio: '',
-              fecha_termina: '',
-              hora_inicio: '',
-              hora_fin: '',
-              dias: []
-          },
-          options: [],
-          selectedClient: null,
-          selectedClientContact: null,
-          list: [],
           loadingRemote: false,
-          clients: [
-              "Kareem Acosta",
-              "Fatima Duran",
-              "Alexa West",
-              "Lewis Holden",
-              "Kamryn Pacheco",
-              "Antwan Zimmerman",
-              "Denise Esparza",
-              "Santos Frazier",
-              "Andres Wiley",
-              "Davin Shaw",
-              "Clara Ellison",
-              "Zoey Gamble"
-          ],
+          listProjets: [],
+          selectedProjectData: null,
+          selectedProject: null,
           action: 'add',
-          status: [{
-              value: 'Option1',
-              label: 'Option1'
-          }, {
-              value: 'Option2',
-              label: 'Option2'
-          }, {
-              value: 'Option3',
-              label: 'Option3'
-          }],
+          loading: false,
           countries: [],
           regions: [],
-          cities: [],
-          dias: [
-              {
-                  label: 'Lunes',
-                  value: 'Lunes'
-              },
-              {
-                  label: 'Martes',
-                  value: 'Martes'
-              },
-              {
-                  label: 'Miércoles',
-                  value: 'Miércoles'
-              },
-              {
-                  label: 'Jueves',
-                  value: 'Jueves'
-              },
-              {
-                  label: 'Viernes',
-                  value: 'Viernes'
-              },
-              {
-                  label: 'Sábado',
-                  value: 'Sábado'
-              },
-              {
-                  label: 'Domingo',
-                  value: 'Domingo'
-              }
-          ],
-          tableData: [
-              {nombre: 'Jornada laboral 1	', cantidad_horas: 8.5, inicial: '09:00 AM', final: '18:30 PM', jornada: 'Lunes; Martes; Miércoles; Jueves.', fecha_inicio: '01/01/16', fecha_final: '02/01/17'},
-              {nombre: 'Jornada laboral 2', cantidad_horas: 7.5, inicial: '09:00 AM', final: '17:30 PM', jornada: 'Viernes.', fecha_inicio: '01/01/16', fecha_final: '02/01/16'},
-              {nombre: 'Colación', cantidad_horas: 1, inicial: '13:00 AM', final: '15:00 PM', jornada: 'Lunes; Martes; Miércoles; Jueves.', fecha_inicio: '01/01/16', fecha_final: '02/01/17'},
-              {nombre: '17 Septiembre	', cantidad_horas: 5, inicial: '09:00 AM', final: '15:00 PM', jornada: 'Jueves', fecha_inicio: '17/09/16', fecha_final: '17/09/16'},
-          ],
-          imageUrl: null
+          municipalities: [],
+          regionLoaded: false,
+
+          listEmpresas: [],
+
+          tipos: [],
+          estados: [],
+          mapVisible: false,
+          map: null,
+          marker: null
       }
     },
     methods: {
-        remoteMethod(query) {
-            if (query !== '') {
+        remoteProject(query) {
+            if (query !== '' && query.length >= 2) {
                 this.loadingRemote = true;
-                setTimeout(() => {
-                    this.loadingRemote = false;
-                    this.options = this.list.filter(item => {
-                        return item.label.toLowerCase()
-                            .indexOf(query.toLowerCase()) > -1;
-                    });
-                }, 200);
+                http.get('api/proyectos/', {
+                    params: {
+                        dato: query,
+                        sin_paginacion: true
+                    }
+                }).then(res=>{
+                    this.listProjets = res.data.data;
+                }).catch(err=>{
+                    this.listProjets = [];
+                });
             } else {
-                this.options = [];
+                this.listProjets = [];
             }
+        },
+        remoteEmpresa(query) {
+            if (query !== '' && query.length >= 2) {
+                this.loadingRemote = true;
+                http.get('api/empresas/', {
+                    params: {
+                        dato: query,
+                        sin_paginacion: true
+                    }
+                }).then(res=>{
+                    this.listEmpresas = res.data.data;
+                }).catch(err=>{
+                    this.listEmpresas = [];
+                });
+            } else {
+                this.listEmpresas = [];
+            }
+        },
+        remoteProjectChange(val){
+            this.selectedProjectData = this.listProjets.find((item)=>{
+                return item.id === val;
+            });
         },
         handleEdit(){
             this.action = 'edit';
-            this.selectedClient = null;
+            this.selectedProject = null;
+            console.log(this.selectedProjectData);
+            this.proyecto = {
+                id: this.selectedProjectData.id,
+                nombre: this.selectedProjectData.nombre,
+                descripcion: this.selectedProjectData.descripcion,
+                valorAdjudicado: this.selectedProjectData.valorAdjudicado,
+                latitud: this.selectedProjectData.latitud,
+                longitud: this.selectedProjectData.longitud,
+                fechaInicio: this.selectedProjectData.fechaInicio,
+                fechaFin: this.selectedProjectData.fechaFin,
+                municipio_id: this.selectedProjectData.municipio.id,
+                region: this.selectedProjectData.municipio.region.id,
+                pais: this.selectedProjectData.municipio.region.pais.id,
+                empresa_id: this.selectedProjectData.empresa.id,
+                //estado_id: this.selectedProjectData.estado.id,
+                //tipo_id: this.selectedProjectData.tipo.id,
+            };
+            this.getRegions();
         },
-        handleImageSuccess(res, file) {
-            console.log(file);
-            this.imageUrl = URL.createObjectURL(file.raw);
+        getCountries(){
+            http.get('api/pais/', {
+                params: {
+                    sin_paginacion: true
+                }
+            }).then(res=>{
+                this.countries = res.data.results.data;
+            });
         },
-        beforeImageUpload(file, fileList) {
-            console.log(file);
-            this.imageUrl = URL.createObjectURL(file.raw);
-        }
+        getRegions(){
+            http.get('api/regiones/', {
+                params: {
+                    sin_paginacion: true,
+                    id_pais: this.proyecto.pais
+                }
+            }).then(res=>{
+                this.regions = res.data.results.data;
+                this.regionLoaded = !this.regionLoaded;
+            });
+        },
+        getMunicipalities(){
+            http.get('api/municipios/', {
+                params: {
+                    sin_paginacion: true,
+                    id_region: this.proyecto.region
+                }
+            }).then(res=>{
+                this.municipalities = res.data.results.data;
+            });
+        },
+        onChangePais(){
+            this.regions = [];
+            this.municipalities = [];
+            this.proyecto.region = '';
+            this.proyecto.municipio_id = '';
+            this.getRegions();
+        },
+        onChangeRegion(){
+            this.municipalities = [];
+            this.proyecto.municipio_id = '';
+            this.getMunicipalities();
+        },
+        getEstados(){
+            http.get('api/estados/', {
+                params: {
+                    sin_paginacion: true
+                }
+            }).then(res=>{
+                this.estados = res.data.results.data;
+            });
+        },
+        getTipos(){
+            http.get('api/tipos/', {
+                params: {
+                    sin_paginacion: true
+                }
+            }).then(res=>{
+                this.tipos = res.data.results.data;
+            });
+        },
+        handleOpenMap(){
+            setTimeout(()=>{
+                this.map = new google.maps.Map(this.$refs.map, {
+                    center: {lat: -26.7003141, lng: -69.7481861},
+                    zoom: 13,
+                    mapTypeId: 'roadmap'
+                });
+                // Create the search box and link it to the UI element.
+                let input = this.$refs.pacInput;
+                let searchBox = new google.maps.places.SearchBox(input);
+                this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+                // Bias the SearchBox results towards current map's viewport.
+                this.map.addListener('bounds_changed', () => {
+                    searchBox.setBounds(this.map.getBounds());
+                });
+
+                // Listen for the event fired when the user selects a prediction and retrieve
+                // more details for that place.
+                searchBox.addListener('places_changed', () => {
+                    let places = searchBox.getPlaces();
+
+                    if (places.length == 0) {
+                        return;
+                    }
+
+                    // Clear out the old markers.
+                    if(this.marker !== null){
+                        this.marker.setMap(null);
+                    }
+
+                    // For each place, get the icon, name and location.
+                    let bounds = new google.maps.LatLngBounds();
+                    places.forEach( (place) => {
+                        if (!place.geometry) {
+                            console.log("Returned place contains no geometry");
+                            return;
+                        }
+
+                        // Create a marker for each place.
+                        this.marker = new google.maps.Marker({
+                            map: this.map,
+                            title: place.name,
+                            position: place.geometry.location,
+                            draggable: true,
+                        });
+
+                        this.marker.addListener('dragend', ()=>{
+                            this.proyecto.latitud = this.marker.getPosition().lat();
+                            this.proyecto.longitud = this.marker.getPosition().lng();
+                        });
+
+                        this.proyecto.latitud = place.geometry.location.lat();
+                        this.proyecto.longitud = place.geometry.location.lng();
+
+                        if (place.geometry.viewport) {
+                            // Only geocodes have viewport.
+                            bounds.union(place.geometry.viewport);
+                        } else {
+                            bounds.extend(place.geometry.location);
+                        }
+                    });
+                    this.map.fitBounds(bounds);
+                });
+            }, 1000);
+        },
+        saveProyecto(){
+            this.$refs.formProyecto.validate(valid=>{
+                if(valid){
+                    this.loading = true;
+                    this.proyecto.fechaInicio = moment(this.proyecto.fechaInicio).format("YYYY-MM-DD");
+                    this.proyecto.fechaFin = moment(this.proyecto.fechaFin).format("YYYY-MM-DD");
+                    if(this.action === 'add'){
+                        if(this.selectedContactContact){
+                            http.post('api/proyectos/', this.proyecto).then(res=>{
+                                let proyecto_id = res.data.data.id;
+                                this.$refs.formProyecto.resetFields();
+                                http.post('api/proyectoContactos/', {
+                                    proyecto_id: proyecto_id,
+                                    persona_id: this.selectedContactContact,
+                                    cargo: 'Contacto'
+                                }).then(res=>{
+                                    this.loading = false;
+                                    this.$notify.success('Datos almacenados');
+                                    this.selectedContactContact = null;
+                                }).catch(err=>{
+                                    this.$notify.error('Error al guardar contacto.');
+                                    this.loading = false;
+                                });
+                            }).catch(err=>{
+                                this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
+                                this.loading = false;
+                            });
+                        }else{
+                            http.post('api/proyectos/', this.proyecto).then(res=>{
+                                this.loading = false;
+                                this.$notify.success('Datos guardados.');
+                                this.$refs.formProyecto.resetFields();
+                            }).catch(err=>{
+                                this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
+                                this.loading = false;
+                            });
+                        }
+                    }else{
+                        http.put('api/proyectos/'+ this.proyecto.id + '/', this.proyecto).then(res=>{
+                            this.loading = false;
+                            this.$notify.success('Datos actualizados.');
+                            this.$refs.formProyecto.resetFields();
+                        }).catch(err=>{
+                            this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
+                            this.loading = false;
+                        });
+                    }
+                }
+            });
+        },
+        remoteContactChange(val){
+            this.selectedContactData = this.remoteContacts.find((item)=>{
+                return item.id === val;
+            });
+        },
+        remoteContact(query) {
+            if (query !== '' && query.length >= 2) {
+                this.loadingRemote = true;
+                http.get('api/personas/', {
+                    params: {
+                        dato: query,
+                        sin_paginacion: true
+                    }
+                }).then(res=>{
+                    this.remoteContacts = res.data.data;
+                }).catch(err=>{
+                    this.remoteContacts = [];
+                });
+            } else {
+                this.remoteContacts = [];
+            }
+        },
     }
 }
 </script>
+<style>
+  .map {
+    height: 300px;
+    width: 100%;
+  }
+  .controls {
+    margin-top: 10px;
+    border: 1px solid transparent;
+    border-radius: 2px 0 0 2px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 32px;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .pac-input {
+    background-color: #fff;
+    font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    margin-left: 12px;
+    padding: 0 11px 0 13px;
+    text-overflow: ellipsis;
+    width: 300px;
+  }
+  .pac-container{
+    z-index: 9999;
+  }
+
+  .pac-input:focus {
+    border-color: #4d90fe;
+  }
+</style>
