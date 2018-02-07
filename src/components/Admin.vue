@@ -78,6 +78,7 @@
               <el-menu-item index="2-3-3" :route="{name: 'employeesList'}">Resultado en Lista Trabajadores</el-menu-item>
               <el-menu-item index="2-3-4" :route="{name: 'employeesMonth'}">Resultado Mensual</el-menu-item>
               <el-menu-item index="2-3-5" :route="{name: 'employeesRequest'}">Solicitudes</el-menu-item>
+              <el-menu-item index="2-3-6" :route="{name: 'newEmployee'}">Nuevo Trabajador</el-menu-item>
             </el-submenu>
           </el-submenu>
 
