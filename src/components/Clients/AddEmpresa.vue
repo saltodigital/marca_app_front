@@ -12,7 +12,7 @@
     </el-row>
     <el-row class="m-bottom-2">
       <el-col>
-        <span>Búsqueda de cliente</span>
+        <span>Búsqueda de cliente Empresa</span>
         <el-select
                 v-model="selectedClient"
                 filterable
@@ -39,128 +39,130 @@
       <h3>Detalle - Cliente Empresa</h3>
     </el-row>
     <el-row :gutter="20" class="m-bottom-2">
-      <el-form label-position="top" :model="empresa" :rules="empresaRules" ref="formEmpresa">
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Nombre empresa" class="fluid-width" prop="nombre">
-            <el-input v-model="empresa.nombre"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Nombre fantasia" class="fluid-width" prop="nombre_fantasia">
-            <el-input v-model="empresa.nombre_fantasia"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="RUT" class="fluid-width" prop="rut">
-            <el-input v-model="empresa.rut"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Correo Electrónico" class="fluid-width" prop="correoElectronico">
-            <el-input v-model="empresa.correoElectronico"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Estado del cliente" class="fluid-width" prop="estado_cliente">
-            <el-select v-model="empresa.estado_cliente">
-              <el-option
-                      v-for="item in [{value: '1', label: 'Activo'}, {value: '2', label: 'Inactivo'}]"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Fecha Estado del Proyecto" class="fluid-width" prop="fecha_estado">
-            <el-date-picker
-                    v-model="empresa.fecha_estado"
-                    type="date"
-                    format="dd-MM-yyyy"
-                    placeholder="Seleccione">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Teléfono" class="fluid-width" prop="telefono">
-            <el-input v-model="empresa.telefono"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Teléfono Fijo" class="fluid-width" prop="telefonoFijo">
-            <el-input v-model="empresa.telefonoFijo"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="País" class="fluid-width" prop="pais">
-            <el-select filterable v-model="empresa.pais" @change="onChangePais">
-              <el-option
-                      v-for="item in countries"
-                      :key="item.id"
-                      :label="item.nombre"
-                      :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Región" class="fluid-width" prop="region">
-            <el-select filterable v-model="empresa.region" :disabled="empresa.pais === '' || !empresa.pais" @change="onChangeRegion">
-              <el-option
-                      v-for="item in regions"
-                      :key="item.id"
-                      :label="item.nombre"
-                      :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Ciudad" class="fluid-width" prop="municipio_id">
-            <el-select filterable v-model="empresa.municipio_id" :disabled="empresa.region === '' || !empresa.region">
-              <el-option
-                      v-for="item in municipalities"
-                      :key="item.id"
-                      :label="item.nombre"
-                      :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="5">
-          <el-form-item label="Nombre Calle" class="fluid-width" prop="direccion">
-            <el-input placeholder="Buscar calle..." v-model="empresa.direccion">
-              <el-button slot="append" icon="el-icon-location"></el-button>
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="4">
-          <el-form-item label="Número" class="fluid-width" prop="numero">
-            <el-input v-model="empresa.numero"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Latitude" class="fluid-width" prop="latitud">
-            <el-input v-model="empresa.latitud"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Longitud" class="fluid-width" prop="longitud">
-            <el-input v-model="empresa.longitud"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="Código Postal" class="fluid-width" prop="codigo_postal">
-            <el-input v-model="empresa.codigo_postal"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="6">
-          <el-form-item label="IP" class="fluid-width" prop="ip">
-            <el-input v-model="empresa.ip"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-form>
+      <el-card class="p-bottom-2">
+        <el-form label-position="top" :model="empresa" :rules="empresaRules" ref="formEmpresa">
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Nombre empresa" class="fluid-width" prop="nombre">
+              <el-input v-model="empresa.nombre"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Nombre fantasia" class="fluid-width" prop="nombre_fantasia">
+              <el-input v-model="empresa.nombre_fantasia"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="RUT" class="fluid-width" prop="rut">
+              <el-input v-model="empresa.rut"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Correo Electrónico" class="fluid-width" prop="correoElectronico">
+              <el-input v-model="empresa.correoElectronico"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Estado del cliente" class="fluid-width" prop="estado_cliente">
+              <el-select v-model="empresa.estado_cliente">
+                <el-option
+                        v-for="item in [{value: '1', label: 'Activo'}, {value: '2', label: 'Inactivo'}]"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Fecha Estado del Proyecto" class="fluid-width" prop="fecha_estado">
+              <el-date-picker
+                      v-model="empresa.fecha_estado"
+                      type="date"
+                      format="dd-MM-yyyy"
+                      placeholder="Seleccione">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Teléfono" class="fluid-width" prop="telefono">
+              <el-input v-model="empresa.telefono"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Teléfono Fijo" class="fluid-width" prop="telefonoFijo">
+              <el-input v-model="empresa.telefonoFijo"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="País" class="fluid-width" prop="pais">
+              <el-select filterable v-model="empresa.pais" @change="onChangePais">
+                <el-option
+                        v-for="item in countries"
+                        :key="item.id"
+                        :label="item.nombre"
+                        :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Región" class="fluid-width" prop="region">
+              <el-select filterable v-model="empresa.region" :disabled="empresa.pais === '' || !empresa.pais" @change="onChangeRegion">
+                <el-option
+                        v-for="item in regions"
+                        :key="item.id"
+                        :label="item.nombre"
+                        :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Ciudad" class="fluid-width" prop="municipio_id">
+              <el-select filterable v-model="empresa.municipio_id" :disabled="empresa.region === '' || !empresa.region">
+                <el-option
+                        v-for="item in municipalities"
+                        :key="item.id"
+                        :label="item.nombre"
+                        :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Nombre Calle" class="fluid-width" prop="direccion">
+              <el-input placeholder="Buscar calle..." v-model="empresa.direccion">
+                <el-button slot="append" icon="el-icon-location"></el-button>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Número" class="fluid-width" prop="numero">
+              <el-input v-model="empresa.numero"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Latitude" class="fluid-width" prop="latitud">
+              <el-input v-model="empresa.latitud"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Longitud" class="fluid-width" prop="longitud">
+              <el-input v-model="empresa.longitud"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Código Postal" class="fluid-width" prop="codigo_postal">
+              <el-input v-model="empresa.codigo_postal"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="IP" class="fluid-width" prop="ip">
+              <el-input v-model="empresa.ip"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-card>
     </el-row>
 
     <el-row class="m-bottom-2">

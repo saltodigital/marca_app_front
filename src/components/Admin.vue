@@ -64,7 +64,7 @@
                 <span slot="title">Cliente</span>
               </template>
               <el-menu-item :route="{name: 'clients'}" index="2-1-1">Lista Clientes</el-menu-item>
-              <el-menu-item :route="{name: 'clientsDetail'}" index="2-1-2">Detalle Cliente</el-menu-item>
+              <!-- <el-menu-item :route="{name: 'clientsDetail'}" index="2-1-2">Detalle Cliente</el-menu-item> -->
               <el-menu-item :route="{name: 'clientsAddEmpresa'}" index="2-1-3">Nuevo Cliente Empresa</el-menu-item>
               <el-menu-item :route="{name: 'clientsAddContact'}" index="2-1-4">Nuevo Cliente Contacto</el-menu-item>
             </el-submenu>
@@ -74,7 +74,7 @@
                 <span slot="title">Proyecto</span>
               </template>
               <el-menu-item :route="{name: 'projects'}" index="2-2-1">Lista Proyectos</el-menu-item>
-              <el-menu-item :route="{name: 'projectsDetail'}" index="2-2--2">Detalle Proyecto</el-menu-item>
+              <!-- <el-menu-item :route="{name: 'projectsDetail'}" index="2-2--2">Detalle Proyecto</el-menu-item> -->
               <el-menu-item :route="{name: 'projectsAddProject'}" index="2-2-3">Nuevo Proyecto</el-menu-item>
               <el-menu-item :route="{name: 'projectsAddContact'}" index="2-2-4">Nuevo Contacto Proyecto</el-menu-item>
             </el-submenu>
@@ -84,10 +84,10 @@
                 <span slot="title">Trabajador</span>
               </template>
               <el-menu-item index="2-3-1" :route="{name: 'employees'}">Novedades en Curso</el-menu-item>
-              <el-menu-item index="2-3-2" :route="{name: 'employeesCalendar'}">Resultados en Calendario</el-menu-item>
+              <!-- <el-menu-item index="2-3-2" :route="{name: 'employeesCalendar'}">Resultados en Calendario</el-menu-item>
               <el-menu-item index="2-3-3" :route="{name: 'employeesList'}">Resultado en Lista Trabajadores</el-menu-item>
-              <el-menu-item index="2-3-4" :route="{name: 'employeesMonth'}">Resultado Mensual</el-menu-item>
-              <el-menu-item index="2-3-5" :route="{name: 'employeesRequest'}">Solicitudes</el-menu-item>
+              <el-menu-item index="2-3-4" :route="{name: 'employeesMonth'}">Resultado Mensual</el-menu-item> -->
+              <!-- <el-menu-item index="2-3-5" :route="{name: 'employeesRequest'}">Solicitudes</el-menu-item> -->
               <el-menu-item index="2-3-6" :route="{name: 'newEmployee'}">Nuevo Trabajador</el-menu-item>
             </el-submenu>
           </el-submenu>

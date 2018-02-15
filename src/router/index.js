@@ -18,6 +18,8 @@ import ProjectsList from "../components/Projects/List";
 import ProjectsDetail from "../components/Projects/Detail";
 import ProjectsAdd from "../components/Projects/AddProject";
 import ProjectsAddContact from "../components/Projects/AddProjectContact";
+import NewProject from "../components/Projects/New";
+import NewProjectContact from "../components/Projects/Contact";
 
 //Employers
 import Features from "../components/Employers/Features";
@@ -87,12 +89,12 @@ export default new Router({
         {
           path: "projects/add",
           name: "projectsAddProject",
-          component: ProjectsAdd
+          component: NewProject
         },
         {
           path: "projects/contact",
           name: "projectsAddContact",
-          component: ProjectsAddContact
+          component: NewProjectContact
         },
         {
           path: "employees",
