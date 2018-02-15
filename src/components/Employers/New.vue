@@ -175,6 +175,10 @@
               <el-input v-model="form.password"></el-input>
             </el-form-item>
           </el-col>
+          <el-col :xs="24" :sm="6">
+              <el-button class="form-item-space" @click="generatePassword">Generar Contraseña</el-button>
+            </el-form-item>
+          </el-col>
         </el-card>
       </el-form>
 
@@ -533,6 +537,9 @@
         this.search = ""
         this.form = {}
         this.resetForm('form')
+      },
+      generatePassword() {
+        this.form.password = Math.random().toString(36).slice(2)
       }
     }
   };
