@@ -35,6 +35,9 @@ import Countries from "../components/Config/Countries";
 import Regions from "../components/Config/Regions";
 import Municipalities from "../components/Config/Municipalities";
 
+//Reports
+import News from "../components/Reports/News";
+
 Vue.use(Router);
 
 export default new Router({
@@ -145,7 +148,12 @@ export default new Router({
           path: "config/locations/:id/municipalities",
           name: "municipalities",
           component: Municipalities
-        }
+        },
+        {
+          path: "reports/news",
+          name: "novedades",
+          component: News
+        },
       ]
     },
     {

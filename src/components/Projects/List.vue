@@ -16,7 +16,7 @@
         </el-input>
       </el-col>
       <el-col :xs="24" :sm="12" class="text-right">
-        <el-button type="primary" size="small" @click="handleNew">Nuevo</el-button>
+        <el-button type="primary" @click="handleNew">Nuevo</el-button>
       </el-col>
     </el-row>
     <el-row class="m-bottom-2">
@@ -162,7 +162,7 @@ export default {
     },
     handleNew() {
       this.$router.push({
-        name: "clientsAddEmpresa"
+        name: "projectsAddProject"
       });
     }
   }

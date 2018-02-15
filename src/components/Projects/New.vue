@@ -4,16 +4,16 @@
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">Inicio</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/projects' }">Proyectos</el-breadcrumb-item>
-        <el-breadcrumb-item>Nuevo Contacto Proyecto</el-breadcrumb-item>
+        <el-breadcrumb-item>Nuevo Proyecto</el-breadcrumb-item>
       </el-breadcrumb>
     </el-row>
     <el-row class="m-bottom-1">
-      <p>Ingreso/Actualización de Contactos Proyecto.</p>
+      <p>Ingreso/Actualización de Proyecto.</p>
     </el-row>
 
     <el-row class="m-bottom-2">
       <el-col>
-        <span>Búsqueda de Proyecto Contacto</span>
+        <span>Búsqueda de Proyecto</span>
         <el-select v-model="selectedContact" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteContactChange"
           :remote-method="remoteContact" :loadingRemote="loadingRemote">
           <el-option v-for="item in remoteContacts" :key="item.id" :label="item.nombre + ' ' + item.primerApellido" :value="item.id">
@@ -25,7 +25,7 @@
       </el-col>
     </el-row>
     <el-row>
-      <h3>Detalle - Contacto Proyecto</h3>
+      <h3>Detalle - Proyecto</h3>
     </el-row>
 
     <el-row :gutter="20" class="m-bottom-2 p-bottom-2">

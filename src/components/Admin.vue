@@ -48,7 +48,7 @@
               <i class="fa fa-puzzle-piece"></i>
               <span slot="title">Informes</span>
             </template>
-            <el-menu-item index="1-1"> Novedades en Curso</el-menu-item>
+            <el-menu-item index="1-1" :route="{name: 'novedades'}"> Novedades en Curso</el-menu-item>
             <el-menu-item index="1-2" :route="{name: 'clients'}">Clientes</el-menu-item>
             <el-menu-item index="1-3" :route="{name: 'projects'}">Proyectos</el-menu-item>
           </el-submenu>
@@ -66,7 +66,7 @@
               <el-menu-item :route="{name: 'clients'}" index="2-1-1">Lista Clientes</el-menu-item>
               <!-- <el-menu-item :route="{name: 'clientsDetail'}" index="2-1-2">Detalle Cliente</el-menu-item> -->
               <el-menu-item :route="{name: 'clientsAddEmpresa'}" index="2-1-3">Nuevo Cliente Empresa</el-menu-item>
-              <el-menu-item :route="{name: 'clientsAddContact'}" index="2-1-4">Nuevo Cliente Contacto</el-menu-item>
+              <!-- <el-menu-item :route="{name: 'clientsAddContact'}" index="2-1-4">Nuevo Cliente Contacto</el-menu-item> -->
             </el-submenu>
             <el-submenu index="2-2">
               <template slot="title">
@@ -83,7 +83,7 @@
                 <i class="fa fa-vcard"></i>
                 <span slot="title">Trabajador</span>
               </template>
-              <el-menu-item index="2-3-1" :route="{name: 'employees'}">Novedades en Curso</el-menu-item>
+              <!-- <el-menu-item index="2-3-1" :route="{name: 'employees'}">Novedades en Curso</el-menu-item> -->
               <!-- <el-menu-item index="2-3-2" :route="{name: 'employeesCalendar'}">Resultados en Calendario</el-menu-item>
               <el-menu-item index="2-3-3" :route="{name: 'employeesList'}">Resultado en Lista Trabajadores</el-menu-item>
               <el-menu-item index="2-3-4" :route="{name: 'employeesMonth'}">Resultado Mensual</el-menu-item> -->
