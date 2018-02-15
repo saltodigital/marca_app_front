@@ -43,6 +43,16 @@
             <span slot="title">Página Principal</span>
           </el-menu-item>
 
+          <el-submenu index="1">
+            <template slot="title">
+              <i class="fa fa-puzzle-piece"></i>
+              <span slot="title">Informes</span>
+            </template>
+            <el-menu-item index="1-1"> Novedades en Curso</el-menu-item>
+            <el-menu-item index="1-2" :route="{name: 'clients'}">Clientes</el-menu-item>
+            <el-menu-item index="1-3" :route="{name: 'projects'}">Proyectos</el-menu-item>
+          </el-submenu>
+
           <el-submenu index="2">
             <template slot="title">
               <i class="fa fa-th-large"></i>
