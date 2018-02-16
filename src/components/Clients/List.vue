@@ -22,38 +22,16 @@
     <el-row class="m-bottom-2">
       <el-card>
         <el-table v-loading="loading" :data="items" style="width: 100%">
-          <el-table-column fixed label="Cliente" width="180">
+          <el-table-column fixed label="Cliente" width="380">
             <template slot-scope="scope">
               <router-link :to="{ name: 'clientsDetail', params: { id: scope.row.id }}">
                 {{ scope.row.nombre }}
               </router-link>
             </template>
           </el-table-column>
-          <el-table-column label="Proyectos" width="180">
+          <el-table-column label="Número de Proyectos" width="200">
             <template slot-scope="scope">
               -
-            </template>
-          </el-table-column>
-          <el-table-column width="160" label="Contacto">
-            <template slot-scope="scope">
-              -
-            </template>
-          </el-table-column>
-          <el-table-column width="160" prop="direccion" label="Dirección">
-          </el-table-column>
-          <el-table-column width="150" label="Ciudad">
-            <template slot-scope="scope">
-              {{ scope.row.municipio.nombre }}
-            </template>
-          </el-table-column>
-          <el-table-column width="150" label="Provincia">
-            <template slot-scope="scope">
-              {{ scope.row.municipio.region.nombre }}
-            </template>
-          </el-table-column>
-          <el-table-column width="100" label="País">
-            <template slot-scope="scope">
-              {{ scope.row.municipio.region.pais.nombre }}
             </template>
           </el-table-column>
           <el-table-column label="Hoy">
@@ -86,7 +64,7 @@
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column width="160" label="Supervisor">
+          <el-table-column width="250" label="Supervisor">
             <template slot-scope="scope">
               -
             </template>

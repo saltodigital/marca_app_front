@@ -121,7 +121,7 @@
       return {
         menuCollapse: false,
         loading: false,
-        menuActive: "1",
+        menuActive: "",
         currentTime: "",
         currentName: this.$store.state.name
       };
