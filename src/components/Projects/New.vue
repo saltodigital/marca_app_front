@@ -605,7 +605,7 @@
         if (query !== "" && query.length >= 2) {
           this.loadingRemote = true;
           http
-            .get("api/proyectos/", {
+            .get("api/empresas/", {
               params: {
                 dato: query,
                 sin_paginacion: true

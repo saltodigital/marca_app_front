@@ -117,13 +117,6 @@
       </el-card>
     </el-row>
 
-    <el-row class="m-bottom-2">
-      <el-col :xs="24" :sm="12">
-        <el-checkbox v-model="add_contact">Asignar a contacto</el-checkbox>
-        <el-checkbox v-model="add_schedule">Asignar horario</el-checkbox>
-      </el-col>
-    </el-row>
-
     <!-- Contact -->
     <el-row v-if="add_contact">
       <h3>Asignar - Cliente Contacto</h3>
