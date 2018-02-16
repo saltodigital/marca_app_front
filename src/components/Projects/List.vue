@@ -39,21 +39,6 @@
               -
             </template>
           </el-table-column>
-          <el-table-column width="150" label="Ciudad">
-            <template slot-scope="scope">
-              {{ scope.row.municipio.nombre }}
-            </template>
-          </el-table-column>
-          <el-table-column width="150" label="Provincia">
-            <template slot-scope="scope">
-              {{ scope.row.municipio.region.nombre }}
-            </template>
-          </el-table-column>
-          <el-table-column width="100" label="País">
-            <template slot-scope="scope">
-              {{ scope.row.municipio.region.pais.nombre }}
-            </template>
-          </el-table-column>
           <el-table-column label="Hoy">
             <el-table-column width="120" label="Trabajadores">
               <template slot-scope="scope">
@@ -85,6 +70,11 @@
             </el-table-column>
           </el-table-column>
           <el-table-column width="160" label="Supervisor">
+            <template slot-scope="scope">
+              -
+            </template>
+          </el-table-column>
+          <el-table-column width="160" label="Sub-Gerente">
             <template slot-scope="scope">
               -
             </template>
