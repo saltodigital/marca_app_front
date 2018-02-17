@@ -15,8 +15,8 @@
       <el-col>
         <span>Búsqueda de Proyecto</span>
         <el-select v-model="selectedContact" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteContactChange"
-          :remote-method="remoteContact" :loadingRemote="loadingRemote">
-          <el-option v-for="item in remoteContacts" :key="item.id" :label="item.nombre + ' ' + item.primerApellido" :value="item.id">
+          :remote-method="remoteProjects" :loadingRemote="loadingRemote">
+          <el-option v-for="item in remoteProjects" :key="item.id" :label="item.nombre" :value="item.id">
           </el-option>
         </el-select>
         <el-button :disabled="!selectedContact" @click="handleEdit">
@@ -30,7 +30,7 @@
 
     <el-row :gutter="20" class="m-bottom-2 p-bottom-2">
       <el-card>
-        <el-form label-position="top" :model="proyecto" ref="formProyecto">
+        <el-form label-position="top" :rules="proyectoRules" :model="proyecto" ref="formProyecto">
           <el-col :xs="24" :sm="6">
             <el-form-item label="ID Proyecto" class="fluid-width" prop="id">
               <el-input v-model="proyecto.id"></el-input>
@@ -161,17 +161,17 @@
             </div>
             <el-col :xs="24" :sm="8">
               <el-form-item label="Nombre Empresa" class="fluid-width" prop="nombreEmpresa">
-                <el-input v-model="empresa.nombreEmpresa"></el-input>
+                <el-input v-model="selectedClientData.nombre"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="8">
               <el-form-item label="Nombre Fantasia" class="fluid-width" prop="nombreFantasia">
-                <el-input v-model="empresa.nombreFantasia"></el-input>
+                <el-input></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="8">
               <el-form-item label="Rut" class="fluid-width" prop="rut">
-                <el-input v-model="empresa.rut"></el-input>
+                <el-input v-model="selectedClientData.rut"></el-input>
               </el-form-item>
             </el-col>
             <el-col class="p-bottom-2">
@@ -189,9 +189,9 @@
     <el-row class="m-bottom-2">
       <el-col>
         <strong>Búsqueda de Cliente Contacto</strong>
-        <el-select v-model="selectedClient" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteClientChange"
-          :remote-method="remoteClient" :loadingRemote="loadingRemote">
-          <el-option v-for="item in remoteClients" :key="item.id" :label="item.nombre" :value="item.id">
+        <el-select v-model="selectedContact" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteContactChange"
+          :remote-method="remoteContact" :loadingRemote="loadingRemote">
+          <el-option v-for="item in remoteContacts" :key="item.id" :label="item.nombre" :value="item.id">
           </el-option>
         </el-select>
       </el-col>
@@ -208,33 +208,33 @@
           </div>
           <el-col :xs="24" :sm="6">
             <el-form-item label="Nombre" class="fluid-width" prop="nombre">
-              <el-input v-model="cliente.nombreEmpresa"></el-input>
+              <el-input v-model="selectedContactData.nombre"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
             <el-form-item label="Apellido Materno" class="fluid-width" prop="apellido_materno">
-              <el-input v-model="cliente.apellido_materno"></el-input>
+              <el-input v-model="selectedContactData.primerApellido"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
             <el-form-item label="Apellido Paterno" class="fluid-width" prop="apellido_paterno">
-              <el-input v-model="cliente.apellido_paterno"></el-input>
+              <el-input v-model="selectedContactData.segundoApellido"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
             <el-form-item label="Rut" class="fluid-width" prop="rut">
-              <el-input v-model="cliente.rut"></el-input>
+              <el-input v-model="selectedContactData.rut"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
             <el-form-item label="Fecha de Nacimiento" class="fluid-width" prop="fecha_nacimiento">
-              <el-date-picker v-model="cliente.fecha_nacimiento" type="date" format="dd-MM-yyyy" placeholder="Seleccione">
+              <el-date-picker v-model="selectedContactData.fechaNacimiento" type="date" format="dd-MM-yyyy" placeholder="Seleccione">
               </el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
             <el-form-item label="Genero" class="fluid-width" prop="genero">
-              <el-select v-model="cliente.genero">
+              <el-select v-model="selectedContactData.genero">
                 <el-option v-for="item in [{value: '1', label: 'Masculino'}, {value: '2', label: 'Femenino'}]" :key="item.value" :label="item.label"
                   :value="item.value">
                 </el-option>
@@ -243,12 +243,12 @@
           </el-col>
           <el-col :xs="24" :sm="6">
             <el-form-item label="Nacionalidad" class="fluid-width" prop="nacionalidad">
-              <el-input v-model="cliente.nacionalidad"></el-input>
+              <el-input v-model="selectedContactData.nacionalidad"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
             <el-form-item label="Estado civil" class="fluid-width" prop="estadoCivil">
-              <el-select v-model="cliente.estado_civil">
+              <el-select v-model="selectedContactData.estadoCivil">
                 <el-option v-for="item in [{value: 'C', label: 'Casado'}, {value: 'S', label: 'Soltero'}, {value: 'O', label: 'Otro'}]" :key="item.value"
                   :label="item.label" :value="item.value">
                 </el-option>
@@ -257,27 +257,22 @@
           </el-col>
           <el-col :xs="24" :sm="6">
             <el-form-item label="Correo Electrónico" class="fluid-width" prop="nacionalidad">
-              <el-input v-model="cliente.correo_electronico"></el-input>
+              <el-input v-model="selectedContactData.correoElectronico"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
             <el-form-item label="Teléfono Fijo" class="fluid-width" prop="telefono_fijo">
-              <el-input v-model="cliente.telefono_fijo"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="6">
-            <el-form-item label="Teléfono Movil 1" class="fluid-width" prop="telefono_movil_1">
-              <el-input v-model="cliente.telefono_movil_1"></el-input>
+              <el-input v-model="selectedContactData.telefonoFijo"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
             <el-form-item label="Teléfono Movil 2" class="fluid-width" prop="telefono_movil_2">
-              <el-input v-model="cliente.telefono_movil_2"></el-input>
+              <el-input v-model="selectedContactData.telefono"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
             <el-form-item label="Cargo Informado" class="fluid-width" prop="cargo_informado">
-              <el-select v-model="cliente.cargo_informado">
+              <el-select v-model="selectedContactData.cargo_informado">
                 <el-option v-for="item in [{value: 'C', label: 'Cargo 1'}, {value: 'S', label: 'Cargo 2'}, {value: 'O', label: 'Cargo 3'}]"
                   :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
@@ -373,7 +368,7 @@
 
     <el-row class="m-bottom-2">
       <el-col>
-        <el-button type="primary" class="float-right" @click="savePersona" :loading="loading">
+        <el-button type="primary" class="float-right" @click="saveProyecto" :loading="loading">
           Guardar
         </el-button>
       </el-col>
@@ -390,10 +385,29 @@
         add_schedule: false,
         remoteClients: [],
         remoteContacts: [],
+        remoteProjects: [],
         selectedClient: null,
         selectedContact: null,
-        selectedClientData: null,
-        selectedContactData: null,
+        selectedClientData: {
+          nombre: null,
+          rut: null,
+          id: null,
+        },
+        selectedContactData: {
+          correoElectronico: null,
+          estadoCivil: null,
+          fechaNacimiento: null,
+          genero: null,
+          id: null,
+          municipio: null,
+          nombre: null,
+          primerApellido: null,
+          rut: null,
+          segundoApellido: null,
+          telefono: null,
+          telefonoFijo: null,
+          cargo_informado: null
+        },
         mapVisible: false,
         map: null,
         marker: null,
@@ -409,15 +423,16 @@
           fechaFin: "",
           municipio_id: null,
           empresa_id: null,
-          estado_id: null,
-          tipo_id: null,
-          nombre_calle: null,
+          estado_id: 2,
+          tipo_id: 1,
+          nombre_calle: "",
           numero: null,
           ip: null,
           pais: null,
           region: null
         },
         empresa: {
+          id: null,
           nombreEmpresa: "",
           nombreFantasia: "",
           rut: ""
@@ -437,61 +452,47 @@
           telefono_movil_2: "",
           cargo_informado: ""
         },
-        rules: {
-          nombre: [{
-            required: true,
-            message: "Campo requerido"
-          }],
-          primerApellido: [{
-            required: true,
-            message: "Campo requerido"
-          }],
-          segundoApellido: [{
-            required: true,
-            message: "Campo requerido"
-          }],
-          rut: [{
-            required: true,
-            message: "Campo requerido"
-          }],
-          genero: [{
-            required: true,
-            message: "Campo requerido"
-          }],
-          estadoCivil: [{
-            required: true,
-            message: "Campo requerido"
-          }],
-          fechaNacimiento: [{
-            required: true,
-            message: "Campo requerido"
-          }],
-          correoElectronico: [{
-            required: true,
-            type: "email",
-            message: "Campo requerido"
-          }],
-          telefono: [{
-            required: true,
-            message: "Campo requerido"
-          }],
-          telefonoFijo: [{
-            required: true,
-            message: "Campo requerido"
-          }],
-          pais: [{
-            required: true,
-            message: "Campo requerido"
-          }],
-          region: [{
-            required: true,
-            message: "Campo requerido"
-          }],
-          municipio_id: [{
-            required: true,
-            message: "Campo requerido"
-          }]
-        },
+        proyectoRules :{
+              nombre: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              descripcion: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              valorAdjudicado: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              latitud: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              longitud: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              fechaInicio: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              fechaFin: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              municipio_id: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              empresa_id: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              estado_id: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              tipo_id: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              pais: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+              region: [
+                  {required: true, message: 'Campo requerido'}
+              ],
+          },
         regionLoaded: false,
         client_horario: {
           nombre: "",
@@ -613,6 +614,7 @@
             })
             .then(res => {
               this.remoteClients = res.data.data;
+              this.clie
             })
             .catch(err => {
               this.remoteClients = [];
@@ -636,6 +638,26 @@
             })
             .catch(err => {
               this.remoteContacts = [];
+            });
+        } else {
+          this.remoteContacts = [];
+        }
+      },
+      remoteProjects(query) {
+        if (query !== "" && query.length >= 2) {
+          this.loadingRemote = true;
+          http
+            .get("api/proyectos/", {
+              params: {
+                dato: query,
+                sin_paginacion: true
+              }
+            })
+            .then(res => {
+              this.remoteProjects = res.data.data;
+            })
+            .catch(err => {
+              this.remoteProjects = [];
             });
         } else {
           this.remoteContacts = [];
@@ -864,7 +886,58 @@
             this.map.fitBounds(bounds);
           });
         }, 1000);
-      }
+      },
+      saveProyecto(){
+            this.$refs.formProyecto.validate(valid=>{
+                if(valid){
+                    this.loading = true;
+                    this.proyecto.fechaInicio = moment(this.proyecto.fechaInicio).format("YYYY-MM-DD");
+                    this.proyecto.fechaFin = moment(this.proyecto.fechaFin).format("YYYY-MM-DD");
+                    this.proyecto.empresa_id = this.selectedClientData.id
+                    if(this.action === 'add'){
+                        if(this.selectedContactData){
+                            http.post('api/proyectos/', this.proyecto).then(res=>{
+                                let proyecto_id = res.data.data.id;
+                                this.$refs.formProyecto.resetFields();
+                                http.post('api/proyectoContactos/', {
+                                    proyecto_id: proyecto_id,
+                                    persona_id: this.selectedContactData.id,
+                                    cargo: 'Contacto'
+                                }).then(res=>{
+                                    this.loading = false;
+                                    this.$notify.success('Datos almacenados');
+                                    this.selectedContactContact = null;
+                                }).catch(err=>{
+                                    this.$notify.error('Error al guardar contacto.');
+                                    this.loading = false;
+                                });
+                            }).catch(err=>{
+                                this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
+                                this.loading = false;
+                            });
+                        }else{
+                            http.post('api/proyectos/', this.proyecto).then(res=>{
+                                this.loading = false;
+                                this.$notify.success('Datos guardados.');
+                                this.$refs.formProyecto.resetFields();
+                            }).catch(err=>{
+                                this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
+                                this.loading = false;
+                            });
+                        }
+                    }else{
+                        http.put('api/proyectos/'+ this.proyecto.id + '/', this.proyecto).then(res=>{
+                            this.loading = false;
+                            this.$notify.success('Datos actualizados.');
+                            this.$refs.formProyecto.resetFields();
+                        }).catch(err=>{
+                            this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
+                            this.loading = false;
+                        });
+                    }
+                }
+            });
+        },
     }
   };
 

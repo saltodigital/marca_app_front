@@ -83,7 +83,7 @@
                 <i class="fa fa-vcard"></i>
                 <span slot="title">Trabajador</span>
               </template>
-              <!-- <el-menu-item index="2-3-1" :route="{name: 'employees'}">Novedades en Curso</el-menu-item> -->
+              <el-menu-item index="2-3-1" :route="{name: 'employees'}">Novedades en Curso</el-menu-item>
               <!-- <el-menu-item index="2-3-2" :route="{name: 'employeesCalendar'}">Resultados en Calendario</el-menu-item>
               <el-menu-item index="2-3-3" :route="{name: 'employeesList'}">Resultado en Lista Trabajadores</el-menu-item>
               <el-menu-item index="2-3-4" :route="{name: 'employeesMonth'}">Resultado Mensual</el-menu-item> -->
@@ -95,10 +95,17 @@
           <el-submenu index="5">
             <template slot="title">
               <i class="fa fa-puzzle-piece"></i>
+              <span slot="title">Asignaciones</span>
+            </template>
+            <el-menu-item index="5-1" :route="{name: 'asignationsworkers'}">Asignación de Trabajador</el-menu-item>
+          </el-submenu>
+          <el-submenu index="6">
+            <template slot="title">
+              <i class="fa fa-puzzle-piece"></i>
               <span slot="title">Configuraciones</span>
             </template>
-            <el-menu-item index="5-1" :route="{name: 'positions'}">Cargos</el-menu-item>
-            <el-menu-item index="5-2" :route="{name: 'locations'}">Ubicaciones</el-menu-item>
+            <el-menu-item index="6-1" :route="{name: 'positions'}">Cargos</el-menu-item>
+            <el-menu-item index="6-2" :route="{name: 'locations'}">Ubicaciones</el-menu-item>
           </el-submenu>
 
         </el-menu>

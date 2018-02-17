@@ -38,6 +38,9 @@ import Municipalities from "../components/Config/Municipalities";
 //Reports
 import News from "../components/Reports/News";
 
+//Asignations
+import Workers from "../components/Asignacion/Worker"
+
 Vue.use(Router);
 
 export default new Router({
@@ -153,6 +156,11 @@ export default new Router({
           path: "reports/news",
           name: "novedades",
           component: News
+        },
+        {
+          path: "asignations/workers",
+          name: "asignationsworkers",
+          component: Workers
         },
       ]
     },
