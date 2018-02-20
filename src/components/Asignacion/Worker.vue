@@ -6,9 +6,11 @@
     <el-row class="m-bottom-1">
       Buscar colaborador
       <el-col :xs="24" :sm="12">
-        <el-input>
-          <el-button slot="append" icon="el-icon-search"></el-button>
-        </el-input>
+        <el-select v-model="user" filterable clearable remote reserve-keyword placeholder="Buscar"
+          :remote-method="remoteUser" >
+          <el-option v-for="item in remoteUsers" :key="item.id" :label="item.nombre" :value="item.id">
+          </el-option>
+        </el-select>
       </el-col>
     </el-row>
     <el-row>
@@ -48,7 +50,35 @@
 
 <script>
   export default {
-
+    data() {
+      return {
+        remoteUsers: [],
+        user: [],
+        loadingRemote: false
+      }
+    },
+    methods: {
+      remoteUser(query) {
+        if (query !== "" && query.length >= 2) {
+          this.loadingRemote = true;
+          http
+            .get("api/users/", {
+              params: {
+                dato: query,
+                sin_paginacion: true
+              }
+            })
+            .then(res => {
+              this.remoteUsers = res.data.data;
+            })
+            .catch(err => {
+              this.remoteUsers = [];
+            });
+        } else {
+          this.remoteUsers = [];
+        }
+      },
+    },
   }
 
 </script>

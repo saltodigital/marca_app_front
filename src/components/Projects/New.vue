@@ -15,7 +15,7 @@
       <el-col>
         <span>Búsqueda de Proyecto</span>
         <el-select v-model="selectedContact" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteContactChange"
-          :remote-method="remoteProjects" :loadingRemote="loadingRemote">
+          :remote-method="remoteProject" :loadingRemote="loadingRemote">
           <el-option v-for="item in remoteProjects" :key="item.id" :label="item.nombre" :value="item.id">
           </el-option>
         </el-select>
@@ -643,7 +643,7 @@
           this.remoteContacts = [];
         }
       },
-      remoteProjects(query) {
+      remoteProject(query) {
         if (query !== "" && query.length >= 2) {
           this.loadingRemote = true;
           http
