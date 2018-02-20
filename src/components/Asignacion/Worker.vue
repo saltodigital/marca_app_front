@@ -6,9 +6,9 @@
     <el-row class="m-bottom-1">
       Buscar colaborador
       <el-col :xs="24" :sm="12">
-        <el-select v-model="user" filterable clearable remote reserve-keyword placeholder="Buscar"
+        <el-select v-model="selectedUser" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteWorkerChange"
           :remote-method="remoteUser" >
-          <el-option v-for="item in remoteUsers" :key="item.id" :label="item.nombre" :value="item.id">
+          <el-option v-for="item in remoteUsers" :key="item.id" :label="item.first_name + ' ' + item.last_name" :value="item.id">
           </el-option>
         </el-select>
       </el-col>
@@ -54,6 +54,7 @@
       return {
         remoteUsers: [],
         user: [],
+        selectedUser: null,
         loadingRemote: false
       }
     },
@@ -69,7 +70,9 @@
               }
             })
             .then(res => {
-              this.remoteUsers = res.data.data;
+              console.log(res.data.results.data);
+
+              this.remoteUsers = res.data.results.data;
             })
             .catch(err => {
               this.remoteUsers = [];
@@ -77,6 +80,11 @@
         } else {
           this.remoteUsers = [];
         }
+      },
+      remoteWorkerChange(val) {
+        this.selectedUser = this.remoteUsers.find(item => {
+          return item.id === val;
+        });
       },
     },
   }

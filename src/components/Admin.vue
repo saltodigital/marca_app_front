@@ -49,6 +49,8 @@
               <span slot="title">Informes</span>
             </template>
             <el-menu-item index="1-1" :route="{name: 'novedades'}"> Novedades en Curso</el-menu-item>
+            <el-menu-item index="1-2">Mensual en Lista</el-menu-item>
+            <el-menu-item index="1-2">Mensual en Calendario</el-menu-item>
             <el-menu-item index="1-2" :route="{name: 'clients'}">Clientes</el-menu-item>
             <el-menu-item index="1-3" :route="{name: 'projects'}">Proyectos</el-menu-item>
           </el-submenu>
@@ -58,38 +60,30 @@
               <i class="fa fa-th-large"></i>
               <span slot="title">Nuevos</span>
             </template>
-            <el-submenu index="2-1">
-              <template slot="title">
-                <i class="fa fa-users"></i>
-                <span slot="title">Cliente</span>
-              </template>
-              <el-menu-item :route="{name: 'clients'}" index="2-1-1">Lista Clientes</el-menu-item>
-              <!-- <el-menu-item :route="{name: 'clientsDetail'}" index="2-1-2">Detalle Cliente</el-menu-item> -->
-              <el-menu-item :route="{name: 'clientsAddEmpresa'}" index="2-1-3">Nuevo Cliente Empresa</el-menu-item>
-              <!-- <el-menu-item :route="{name: 'clientsAddContact'}" index="2-1-4">Nuevo Cliente Contacto</el-menu-item> -->
-            </el-submenu>
-            <el-submenu index="2-2">
+            <el-menu-item :route="{name: 'clientsAddEmpresa'}" index="2-1-3">Cliente</el-menu-item>
+            <el-menu-item :route="{name: 'projectsAddProject'}" index="2-2-3">Nuevo Proyecto</el-menu-item>
+            <!-- <el-submenu index="2-2">
               <template slot="title">
                 <i class="fa fa-briefcase"></i>
                 <span slot="title">Proyecto</span>
               </template>
               <el-menu-item :route="{name: 'projects'}" index="2-2-1">Lista Proyectos</el-menu-item>
               <!-- <el-menu-item :route="{name: 'projectsDetail'}" index="2-2--2">Detalle Proyecto</el-menu-item> -->
-              <el-menu-item :route="{name: 'projectsAddProject'}" index="2-2-3">Nuevo Proyecto</el-menu-item>
+              <!--<el-menu-item :route="{name: 'projectsAddProject'}" index="2-2-3">Nuevo Proyecto</el-menu-item>
               <el-menu-item :route="{name: 'projectsAddContact'}" index="2-2-4">Nuevo Contacto Proyecto</el-menu-item>
-            </el-submenu>
-            <el-submenu index="2-3">
+            </el-submenu> -->
+            <el-menu-item index="2-3-6" :route="{name: 'newEmployee'}">Nuevo Trabajador</el-menu-item>
+            <!-- <el-submenu index="2-3">
               <template slot="title">
                 <i class="fa fa-vcard"></i>
                 <span slot="title">Trabajador</span>
               </template>
-              <el-menu-item index="2-3-1" :route="{name: 'employees'}">Novedades en Curso</el-menu-item>
+              <el-menu-item index="2-3-1" :route="{name: 'employees'}">Novedades en Curso</el-menu-item> -->
               <!-- <el-menu-item index="2-3-2" :route="{name: 'employeesCalendar'}">Resultados en Calendario</el-menu-item>
               <el-menu-item index="2-3-3" :route="{name: 'employeesList'}">Resultado en Lista Trabajadores</el-menu-item>
               <el-menu-item index="2-3-4" :route="{name: 'employeesMonth'}">Resultado Mensual</el-menu-item> -->
               <!-- <el-menu-item index="2-3-5" :route="{name: 'employeesRequest'}">Solicitudes</el-menu-item> -->
-              <el-menu-item index="2-3-6" :route="{name: 'newEmployee'}">Nuevo Trabajador</el-menu-item>
-            </el-submenu>
+            <!-- </el-submenu> -->
           </el-submenu>
 
           <el-submenu index="5">
@@ -98,6 +92,8 @@
               <span slot="title">Asignaciones</span>
             </template>
             <el-menu-item index="5-1" :route="{name: 'asignationsworkers'}">Asignación de Trabajador</el-menu-item>
+            <el-menu-item index="5-2">Asignación de Permisos</el-menu-item>
+            <el-menu-item index="5-3">Asignar Horario Extendido</el-menu-item>
           </el-submenu>
           <el-submenu index="6">
             <template slot="title">

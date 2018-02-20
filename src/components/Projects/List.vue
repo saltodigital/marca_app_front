@@ -12,7 +12,7 @@
     <el-row class="m-bottom-1">
       <el-col :xs="24" :sm="12">
         <el-input v-model="pagination.search" placeholder="Buscar..." @keyup.enter.native="handleKeyUp" size="small">
-          <el-button slot="append" icon="el-icon-search" @click="getData"></el-button>
+          <el-button slot="append"  @click="getData">Buscar</el-button>
         </el-input>
       </el-col>
       <el-col :xs="24" :sm="12" class="text-right">
