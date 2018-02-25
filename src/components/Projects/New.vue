@@ -58,7 +58,7 @@
               <el-input type="textarea" v-model="proyecto.descripcion" :rows="6"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="6">
+          <!-- <el-col :xs="24" :sm="6">
             <el-form-item label="País" class="fluid-width" prop="pais">
               <el-select v-model="proyecto.pais" filterable @change="onChangePais">
                 <el-option v-for="item in countries" :key="item.id" :label="item.nombre" :value="item.id">
@@ -78,6 +78,30 @@
             <el-form-item label="Ciudad" class="fluid-width" prop="municipio_id">
               <el-select v-model="proyecto.municipio_id" :disabled="proyecto.region === '' || !proyecto.region">
                 <el-option v-for="item in municipalities" :key="item.id" :label="item.nombre" :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col> -->
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="País" class="fluid-width" prop="country">
+              <el-select v-model="proyecto.country" placeholder="Selecccione su Nacionalidad" @input="getRegions(proyecto.country)">
+                <el-option v-for="country in countries" :key="country.id" :label="country.nombre" :value="country.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Región" class="fluid-width" prop="region">
+              <el-select v-model="proyecto.region" placeholder="Selecccione su Región" :disabled="proyecto.country ? false : true" @input="getCities(proyecto.region)">
+                <el-option v-for="region in regions" :key="region.id" :label="region.nombre" :value="region.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Ciudad" class="fluid-width" prop="city">
+              <el-select filterable v-model="proyecto.city" :disabled="proyecto.region ? false : true">
+                <el-option v-for="city in cities" :key="city.id" :label="city.nombre" :value="city.id">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -388,6 +412,7 @@
         remoteProjects: [],
         selectedClient: null,
         selectedContact: null,
+        cities: [],
         selectedClientData: {
           nombre: null,
           rut: null,
@@ -665,7 +690,7 @@
       },
       getCountries() {
         http
-          .get("api/pais/", {
+          .get("/api/pais/", {
             params: {
               sin_paginacion: true
             }
@@ -674,30 +699,36 @@
             this.countries = res.data.results.data;
           });
       },
-      getRegions() {
+      getRegions(id) {
         http
-          .get("api/regiones/", {
+          .get("/api/regiones/", {
             params: {
               sin_paginacion: true,
-              id_pais: this.persona.pais
+              id_pais: id
             }
           })
           .then(res => {
             this.regions = res.data.results.data;
-            this.regionLoaded = !this.regionLoaded;
           });
       },
-      getMunicipalities() {
+      getCities(id) {
         http
-          .get("api/municipios/", {
+          .get("/api/municipios/", {
             params: {
               sin_paginacion: true,
-              id_region: this.persona.region
+              id_region: id
             }
           })
           .then(res => {
-            this.municipalities = res.data.results.data;
+            this.cities = res.data.results.data;
           });
+      },
+      getCity(id) {
+        http.get(`/api/municipios/${id}`).then(res => {
+          console.log(res.data.data);
+          this.cities = res.data.data;
+          this.city = res.data.data.id;
+        });
       },
       onChangePais() {
         this.regions = [];
