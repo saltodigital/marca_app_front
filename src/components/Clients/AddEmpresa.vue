@@ -47,8 +47,8 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
-            <el-form-item label="Nombre fantasia" class="fluid-width" prop="nombre_fantasia">
-              <el-input v-model="empresa.nombre_fantasia"></el-input>
+            <el-form-item label="Nombre fantasia" class="fluid-width" prop="field">
+              <el-input v-model="empresa.field"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
@@ -62,10 +62,10 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
-            <el-form-item label="Estado del cliente" class="fluid-width" prop="estado_cliente">
-              <el-select v-model="empresa.estado_cliente">
+            <el-form-item label="Estado del cliente" class="fluid-width" prop="estado">
+              <el-select v-model="empresa.estado">
                 <el-option
-                        v-for="item in [{value: '1', label: 'Activo'}, {value: '2', label: 'Inactivo'}]"
+                        v-for="item in [{value: true, label: 'Activo'}, {value: false, label: 'Inactivo'}]"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -74,9 +74,9 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
-            <el-form-item label="Fecha Estado del Proyecto" class="fluid-width" prop="fecha_estado">
+            <el-form-item label="Fecha Estado del Proyecto" class="fluid-width" prop="fechaEstadoProyecto">
               <el-date-picker
-                      v-model="empresa.fecha_estado"
+                      v-model="empresa.fechaEstadoProyecto"
                       type="date"
                       format="dd-MM-yyyy"
                       placeholder="Seleccione">
@@ -150,22 +150,22 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
-            <el-form-item label="Latitude" class="fluid-width" prop="latitud">
+            <el-form-item style="display: none;" label="Latitude" class="fluid-width" prop="latitud">
               <el-input v-model="empresa.latitud"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
-            <el-form-item label="Longitud" class="fluid-width" prop="longitud">
+            <el-form-item style="display: none;" label="Longitud" class="fluid-width" prop="longitud">
               <el-input v-model="empresa.longitud"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
-            <el-form-item label="Código Postal" class="fluid-width" prop="codigo_postal">
+            <el-form-item style="display: none;" label="Código Postal" class="fluid-width" prop="codigo_postal">
               <el-input v-model="empresa.codigo_postal"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
-            <el-form-item label="IP" class="fluid-width" prop="ip">
+            <el-form-item style="display: none;" label="IP" class="fluid-width" prop="ip">
               <el-input v-model="empresa.ip"></el-input>
             </el-form-item>
           </el-col>
@@ -314,6 +314,7 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
@@ -339,14 +340,14 @@ export default {
         telefono: "",
         telefonoFijo: "",
         municipio_id: "",
-        field: "Empresa",
+        field: "",
         region: "",
         pais: "",
 
         nombre_fantasia: "",
         fecha_registro: "",
-        estado_cliente: "",
-        fecha_estado: "",
+        estado: "",
+        fechaEstadoProyecto: "",
         ciudad: "",
         numero: "",
         latitud: "",
@@ -447,7 +448,7 @@ export default {
       ],
       tableData: [
         {
-          nombre: "Jornada laboral 1	",
+          nombre: "Jornada laboral 1  ",
           cantidad_horas: 8.5,
           inicial: "09:00 AM",
           final: "18:30 PM",
@@ -474,7 +475,7 @@ export default {
           fecha_final: "02/01/17"
         },
         {
-          nombre: "17 Septiembre	",
+          nombre: "17 Septiembre  ",
           cantidad_horas: 5,
           inicial: "09:00 AM",
           final: "15:00 PM",
@@ -596,7 +597,11 @@ export default {
         municipio_id: this.selectedClientData.municipio.id,
         region: this.selectedClientData.municipio.region.id,
         pais: this.selectedClientData.municipio.region.pais.id,
-        field: "Empresa"
+        field: this.selectedClientData.field,
+        estado: this.selectedClientData.estado,
+        fechaEstadoProyecto: this.selectedClientData.fechaEstadoProyecto,
+        numero: this.selectedClientData.numero
+
       };
       this.getRegions();
     },
@@ -663,10 +668,16 @@ export default {
             this.marker.addListener("dragend", () => {
               this.empresa.latitud = this.marker.getPosition().lat();
               this.empresa.longitud = this.marker.getPosition().lng();
+              console.log(place.name);
+              this.empresa.direccion = place.name
+
             });
 
             this.empresa.latitud = place.geometry.location.lat();
             this.empresa.longitud = place.geometry.location.lng();
+            console.log("Nombre Calle "+place.name);
+            this.empresa.direccion = place.name
+
 
             if (place.geometry.viewport) {
               // Only geocodes have viewport.
@@ -682,8 +693,9 @@ export default {
     saveEmpresa() {
       this.$refs.formEmpresa.validate(valid => {
         if (valid) {
+          this.empresa.fechaEstadoProyecto = moment(this.empresa.fechaEstadoProyecto).format("YYYY-MM-DD");
           this.loading = true;
-          this.empresa.field = "Empresa";
+          //this.empresa.field = "Empresa";
           if (this.action === "add") {
             if (this.selectedContactContact) {
               http
@@ -733,6 +745,7 @@ export default {
                 });
             }
           } else {
+            console.log("Editado "+ this.empresa.fechaEstadoProyecto);
             http
               .put("api/empresas/" + this.empresa.id + "/", this.empresa)
               .then(res => {

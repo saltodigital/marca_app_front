@@ -288,11 +288,14 @@ import moment from 'moment'
         });
       },
       saveProjectUser(){
+        console.log("id user "+this.selectedUser.id);
+        console.log("id proyecto "+ selectedProject.id);
+        //console.log("id cargo "+selectedUser.cargo.id);
         http
             .post("api/proyectoUsuarios/", {
                 usuario_id: this.selectedUser.id,
-                proyecto_id: this.selectedProject,
-                cargo_id: this.selectedUser.cargo.id,
+                proyecto_id: this.selectedProject.id,
+                cargo_id: "7",
                 desde: this.desde,
                 hasta: this.hasta,
                 horas: this.horas
@@ -312,6 +315,7 @@ import moment from 'moment'
                 })
               })
             .catch(err => {
+              console.log(err);
               this.$notify.error("Problemas al guardar registro");
             });
       }

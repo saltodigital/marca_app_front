@@ -7,33 +7,7 @@
         <el-breadcrumb-item>Nuevo Proyecto</el-breadcrumb-item>
       </el-breadcrumb>
     </el-row>
-    <el-row class="m-bottom-1">
-      <p>Ingreso/Actualización de Proyecto.</p>
-    </el-row>
-    <el-row class="m-bottom-2">
-      <el-col>
-        <span>Búsqueda de cliente</span>
-        <el-select
-                v-model="selectedClient"
-                filterable
-                clearable
-                remote
-                reserve-keyword
-                placeholder="Buscar cliente empresa"
-                :remote-method="remoteMethod"
-                :loadingRemote="loadingRemote">
-          <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-          </el-option>
-        </el-select>
-        <el-button :disabled="!selectedClient" @click="handleEdit">
-          Editar
-        </el-button>
-      </el-col>
-    </el-row>
+    
     <el-row>
       <h3>Detalle - Cliente Empresa</h3>
     </el-row>

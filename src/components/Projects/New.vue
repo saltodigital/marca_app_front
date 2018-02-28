@@ -190,7 +190,7 @@
             </el-col>
             <el-col :xs="24" :sm="8">
               <el-form-item label="Nombre Fantasia" class="fluid-width" prop="nombreFantasia">
-                <el-input></el-input>
+                <el-input v-model="selectedClientData.field"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="8">
@@ -416,6 +416,7 @@
         selectedClientData: {
           nombre: null,
           rut: null,
+          field: null,
           id: null,
         },
         selectedContactData: {
@@ -952,6 +953,7 @@
                                 this.$notify.success('Datos guardados.');
                                 this.$refs.formProyecto.resetFields();
                             }).catch(err=>{
+                               console.log("Errores "+err);
                                 this.$notify.error(err.response.data && err.response.data.message ? err.response.data.message : 'No fue posible guardar los datos.');
                                 this.loading = false;
                             });

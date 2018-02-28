@@ -24,7 +24,7 @@
         <el-table v-loading="loading" :data="items" style="width: 100%">
           <el-table-column fixed label="Cliente" width="180">
             <template slot-scope="scope">
-              {{ scope.row.empresa.nombre }}
+              {{ scope.row.empresa }}
             </template>
           </el-table-column>
           <el-table-column label="Proyectos" width="180">
@@ -36,13 +36,13 @@
           </el-table-column>
           <el-table-column width="160" label="Contacto">
             <template slot-scope="scope">
-              -
+              {{ scope.row.contacto }}
             </template>
           </el-table-column>
           <el-table-column label="Hoy">
             <el-table-column width="120" label="Trabajadores">
               <template slot-scope="scope">
-                12
+               {{ scope.row.usuarios }}
               </template>
             </el-table-column>
             <el-table-column width="120" label="Puntualidad">
@@ -57,7 +57,7 @@
           <el-table-column label="Mensual en curso">
             <el-table-column width="120" label="Trabajadores">
               <template slot-scope="scope">
-                23
+                 {{ scope.row.usuarios }}
               </template>
             </el-table-column>
             <el-table-column width="120" label="Puntualidad">
@@ -71,7 +71,7 @@
           </el-table-column>
           <el-table-column width="160" label="Supervisor">
             <template slot-scope="scope">
-              -
+               {{ scope.row.supervisor }}
             </template>
           </el-table-column>
           <el-table-column width="160" label="Sub-Gerente">
@@ -115,14 +115,16 @@ export default {
     getData() {
       this.loading = true;
       http
-        .get("api/proyectos/", {
+        .get("api/listaProyectos/", {
           params: {
             page: this.pagination.currentPage,
             dato: this.pagination.search
           }
         })
         .then(res => {
-          this.items = res.data.results.data;
+          this.items = res.data.data;
+
+          console.log(res.data.data);
 
           this.pagination.next = res.data.next;
           this.pagination.prev = res.data.previuos;
