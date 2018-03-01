@@ -3,63 +3,76 @@
     <el-row class="m-bottom-1">
       <h3>Asignación de Colaboradores.</h3>
     </el-row>
-    <el-row class="m-bottom-1">
-      <el-col :xs="24" :sm="6" class="m-bottom-2">
-        Buscar colaborador
-        <el-select v-model="selectedUser" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteWorkerChange"
-          :remote-method="remoteUser" >
-          <el-option v-for="item in remoteUsers" :key="item.id" :label="item.first_name + ' ' + item.last_name" :value="item.id">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :xs="24" :sm="6" class="m-bottom-2">
-        Buscar Cliente
-         <el-select v-model="selectedClient" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteClientChange"
-          :remote-method="remoteClient" :loadingRemote="loadingRemote" :disabled="!selectedUser">
-          <el-option v-for="item in remoteClients" :key="item.id" :label="item.nombre" :value="item.id">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :xs="24" :sm="6" class="m-bottom-2">
-        Buscar Proyecto
-         <el-select v-model="selectedProject" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteProjectChange"
-          :remote-method="remoteProject" :loadingRemote="loadingRemote">
-          <el-option v-for="item in remoteProjects" :key="item.id" :label="item.nombre" :value="item.id">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :xs="24" :sm="6" class="m-bottom-2">
-        Desde
-        <el-date-picker
-          v-model="desde"
-          format="dd-MM-yyyy"
-          type="date"
-          placeholder="Desde">
-        </el-date-picker>
-      </el-col>
-      <el-col :xs="24" :sm="6" class="m-bottom-2">
-        Hasta
-        <el-date-picker
-          v-model="hasta"
-          format="dd-MM-yyyy"
-          type="date"
-          placeholder="Desde">
-        </el-date-picker>
-      </el-col>
-      <el-col :xs="24" :sm="6" class="m-bottom-2">
-        Días
-        <el-input
-          v-model="dias">
-        </el-input>
-      </el-col>
-      <el-col :xs="24" :sm="6" class="m-bottom-2">
-        Horas
-        <el-input
-          v-model="horas">
-        </el-input>
-      </el-col>
-      <el-col :xs="24" :sm="6" class="m-bottom-2">
-        <el-button type="primary" @click="saveProjectUser" >Asignar</el-button>
+    <el-row :gutter="20" class="m-bottom-2">
+      <el-card class="p-bottom-2">
+        <el-form label-position="top" :model="assignment" :rules="assignmentRules"  ref="formAssignment">
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Buscar colaborador" class="fluid-width" prop="user">
+              <el-select v-model="assignment.user" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteWorkerChange"
+                :remote-method="remoteUser" >
+                <el-option v-for="item in remoteUsers" :key="item.id" :label="item.first_name + ' ' + item.last_name" :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Buscar Cliente" class="fluid-width" prop="client">
+              <el-select v-model="assignment.client" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteClientChange"
+                :remote-method="remoteClient" :loadingRemote="loadingRemote" :disabled="!assignment.user">
+                <el-option v-for="item in remoteClients" :key="item.id" :label="item.nombre" :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Buscar Proyecto" class="fluid-width" prop="project">
+              <el-select v-model="assignment.project" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteProjectChange"
+                :remote-method="remoteProject" :loadingRemote="loadingRemote">
+                <el-option v-for="item in remoteProjects" :key="item.id" :label="item.nombre" :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Desde" class="fluid-width" prop="from">
+              <el-date-picker
+                v-model="assignment.from"
+                format="dd-MM-yyyy"
+                type="date"
+                placeholder="Desde">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Hasta" class="fluid-width" prop="to">
+              <el-date-picker
+                v-model="assignment.to"
+                format="dd-MM-yyyy"
+                type="date"
+                placeholder="Hasta">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Días" class="fluid-width" prop="days">
+              <el-input
+                v-model="assignment.days">
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Horas" class="fluid-width" prop="hours">
+              <el-input
+                v-model="assignment.hours">
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-card>
+    </el-row>
+    <el-row class="m-bottom-2">
+      <el-col>
+        <el-button type="primary" class="float-right" @click="saveProjectUser" >Asignar</el-button>
       </el-col>
     </el-row>
     <el-row class="m-bottom-3">
@@ -193,6 +206,24 @@ import moment from 'moment'
         selectedClientData: [],
         selectedProjectData: [],
         selectedProjectUser: [],
+        assignmentRules: {
+          user: [{ required: true, message: "Campo requerido" }],
+          client: [{ required: true, message: "Campo requerido" }],
+          project: [{ required: true, message: "Campo requerido" }],
+          from: [{ required: true, message: "Campo requerido" }],
+          to: [{ required: true, message: "Campo requerido" }],
+          days: [{ required: true, message: "Campo requerido" }],
+          hours: [{ required: true, message: "Campo requerido" }],
+        },
+        assignment: {
+          user: '',
+          client: '',
+          project: '',
+          from: '',
+          to: '',
+          days: '',
+          hours: ''
+        },
         items: [],
         desde: null,
         hasta: null,
@@ -202,10 +233,10 @@ import moment from 'moment'
     },
     watch: {
       "desde": function (n) {
-        this.desde = moment(n).format("YYYY-MM-DD");
+        this.assignment.from = moment(n).format("YYYY-MM-DD");
       },
       "hasta": function (n) {
-        this.hasta = moment(n).format("YYYY-MM-DD");
+        this.assignment.to = moment(n).format("YYYY-MM-DD");
       },
     },
     methods: {
@@ -220,8 +251,6 @@ import moment from 'moment'
               }
             })
             .then(res => {
-              console.log(res.data.results.data);
-
               this.remoteUsers = res.data.results.data;
             })
             .catch(err => {
@@ -232,10 +261,10 @@ import moment from 'moment'
         }
       },
       remoteWorkerChange(val) {
-        this.selectedUser = this.remoteUsers.find(item => {
+        this.assignment.user = this.remoteUsers.find(item => {
           return item.id === val;
         });
-        this.items.push(this.selectedUser)
+        this.items.push(this.assignment.user)
       },
       remoteClient(query) {
         if (query !== "" && query.length >= 2) {
@@ -248,7 +277,6 @@ import moment from 'moment'
             })
             .then(res => {
               this.remoteClients = res.data.data;
-              this.clie
             })
             .catch(err => {
               this.remoteClients = [];
@@ -258,7 +286,7 @@ import moment from 'moment'
         }
       },
       remoteClientChange(val) {
-        this.selectedClientData = this.remoteClients.find(item => {
+        this.assignment.client = this.remoteClients.find(item => {
           return item.id === val;
         });
       },
@@ -283,41 +311,42 @@ import moment from 'moment'
         }
       },
       remoteProjectChange(val) {
-        this.selectedProjectData = this.remoteProjects.find(item => {
+        this.assignment.project = this.remoteProjects.find(item => {
           return item.id === val;
         });
       },
-      saveProjectUser(){
-        console.log("id user "+this.selectedUser.id);
-        console.log("id proyecto "+ selectedProject.id);
-        //console.log("id cargo "+selectedUser.cargo.id);
-        http
-            .post("api/proyectoUsuarios/", {
-                usuario_id: this.selectedUser.id,
-                proyecto_id: this.selectedProject.id,
-                cargo_id: "7",
-                desde: this.desde,
-                hasta: this.hasta,
-                horas: this.horas
-            })
-            .then(res => {
-              this.$notify.success("Datos almacenados Correactamente");
-              http
-              .get("api/proyectoUsuarios/", {
-                params: {
+      saveProjectUser () {
+        this.$refs.formAssignment.validate(valid => {
+          if (valid) {
+            http
+                .post("api/proyectoUsuarios/", {
                     usuario_id: this.selectedUser.id,
-                }
-                }).then( response => {
-                  this.personProject = response.results
-                  this.selectedProjectUser = this.personProject.find(item => {
-                    return item.usuario.id === this.selectedUser.id;
-                  });
+                    proyecto_id: this.selectedProjectData.id,
+                    cargo_id: this.selectedClientData.id,
+                    desde: this.desde,
+                    hasta: this.hasta,
+                    horas: this.horas
                 })
-              })
-            .catch(err => {
-              console.log(err);
-              this.$notify.error("Problemas al guardar registro");
-            });
+                .then(res => {
+                  this.$notify.success("Datos almacenados Correactamente");
+                  http
+                  .get("api/proyectoUsuarios/", {
+                    params: {
+                        usuario_id: this.selectedUser.id,
+                    }
+                    }).then( response => {
+                      this.personProject = response.results
+                      this.selectedProjectUser = this.personProject.find(item => {
+                        return item.usuario.id === this.selectedUser.id;
+                      });
+                    })
+                  })
+                .catch(err => {
+                  console.log(err);
+                  this.$notify.error("Problemas al guardar registro");
+                });
+          }
+        })
       }
     },
   }
