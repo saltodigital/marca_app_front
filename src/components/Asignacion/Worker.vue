@@ -7,7 +7,7 @@
       <el-card class="p-bottom-2">
         <el-form label-position="top" :model="assignment" :rules="assignmentRules"  ref="formAssignment">
           <el-col :xs="24" :sm="6">
-            <el-form-item label="Buscar colaborador" class="fluid-width" prop="user">
+            <el-form-item label="Colaborador" class="fluid-width" prop="user">
               <el-select v-model="assignment.user" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteWorkerChange"
                 :remote-method="remoteUser" >
                 <el-option v-for="item in remoteUsers" :key="item.id" :label="item.first_name + ' ' + item.last_name" :value="item.id">
@@ -15,13 +15,25 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="6">
+<!--           <el-col :xs="24" :sm="6">
             <el-form-item label="Buscar Cliente" class="fluid-width" prop="client">
               <el-select v-model="assignment.client" filterable clearable remote reserve-keyword placeholder="Buscar" @change="remoteClientChange"
                 :remote-method="remoteClient" :loadingRemote="loadingRemote" :disabled="!assignment.user">
                 <el-option v-for="item in remoteClients" :key="item.id" :label="item.nombre" :value="item.id">
                 </el-option>
               </el-select>
+            </el-form-item>
+          </el-col> -->
+          <el-col :xs="24" :sm="6">
+            <el-form-item label="Cargo" class="fluid-width" prop="position">
+                <el-select filterable v-model="assignment.position">
+                  <el-option
+                    v-for="item in remotePositions"
+                    :key="item.id"
+                    :label="item.nombre"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="6">
@@ -198,6 +210,7 @@ import moment from 'moment'
         remoteClients: [],
         remoteProjects: [],
         remoteContacts: [],
+        remotePositions: [],
         user: [],
         selectedUser: null,
         selectedClient: null,
@@ -208,7 +221,7 @@ import moment from 'moment'
         selectedProjectUser: [],
         assignmentRules: {
           user: [{ required: true, message: "Campo requerido" }],
-          client: [{ required: true, message: "Campo requerido" }],
+          position: [{ required: true, message: "Campo requerido" }],
           project: [{ required: true, message: "Campo requerido" }],
           from: [{ required: true, message: "Campo requerido" }],
           to: [{ required: true, message: "Campo requerido" }],
@@ -217,7 +230,7 @@ import moment from 'moment'
         },
         assignment: {
           user: '',
-          client: '',
+          position: '',
           project: '',
           from: '',
           to: '',
@@ -230,6 +243,9 @@ import moment from 'moment'
         dias: null,
         horas: null
       }
+    },
+    mounted() {
+      this.getPositions();
     },
     watch: {
       "desde": function (n) {
@@ -315,36 +331,49 @@ import moment from 'moment'
           return item.id === val;
         });
       },
+      getPositions () {
+        http
+          .get("api/cargos/", {
+            params: {
+              sin_paginacion: true
+            }
+          })
+          .then(res => {
+            this.remotePositions = res.data.data;
+          })
+          .catch(err => {
+            this.remoteProjects = [];
+          });
+      },
       saveProjectUser () {
         this.$refs.formAssignment.validate(valid => {
           if (valid) {
             http
-                .post("api/proyectoUsuarios/", {
-                    usuario_id: this.selectedUser.id,
-                    proyecto_id: this.selectedProjectData.id,
-                    cargo_id: this.selectedClientData.id,
-                    desde: this.desde,
-                    hasta: this.hasta,
-                    horas: this.horas
-                })
-                .then(res => {
-                  this.$notify.success("Datos almacenados Correactamente");
-                  http
-                  .get("api/proyectoUsuarios/", {
-                    params: {
-                        usuario_id: this.selectedUser.id,
-                    }
-                    }).then( response => {
-                      this.personProject = response.results
-                      this.selectedProjectUser = this.personProject.find(item => {
-                        return item.usuario.id === this.selectedUser.id;
-                      });
-                    })
+              .post("api/proyectoUsuarios/", {
+                  usuario_id: this.assignment.user.id,
+                  proyecto_id: this.assignment.project.id,
+                  cargo_id: this.assignment.position,
+                  desde: moment(this.assignment.from).format('YYYY-MM-DD'),
+                  hasta: moment(this.assignment.to).format('YYYY-MM-DD'),
+                  horas: this.assignment.hours
+              })
+              .then(res => {
+                this.$notify.success("Datos almacenados Correactamente");
+                http
+                .get("api/proyectoUsuarios/", {
+                  params: {
+                      usuario_id: this.selectedUser.id,
+                  }
+                  }).then( response => {
+                    this.personProject = response.results
+                    this.selectedProjectUser = this.personProject.find(item => {
+                      return item.usuario.id === this.selectedUser.id;
+                    });
                   })
-                .catch(err => {
-                  console.log(err);
-                  this.$notify.error("Problemas al guardar registro");
-                });
+                })
+              .catch(err => {
+                this.$notify.error(err.response.data.message);
+              });
           }
         })
       }
